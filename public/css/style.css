@@ -1,0 +1,41 @@
+.loader{
+    background:black;
+    opacity:0.4;
+}
+#cEdit{
+    display:none;
+}
+
+.table{
+    margin-bottom: -20px;
+}
+.left-nav{
+    list-style-type: none;
+}
+.pagination{
+      margin-bottom: 0;
+}
+.list-group .active{
+    background-color: #E4EEF3;
+}
+.input-sm{
+    margin: -4px 0px !important;
+}
+.alert, .thumbnail {
+    margin-bottom: 0;
+    position: absolute;
+    top: 34px;
+    z-index: 9999;
+    width: 40%;
+    right: 35px;
+    margin: 0 auto;
+    display:none,
+}
+.popForm{
+    border: 2px #f2dede solid;
+    border-radius: 2%;
+    padding: 10px;
+}
+input[type="file"] {
+    height: auto;
+}
