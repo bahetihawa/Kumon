@@ -177,8 +177,11 @@ class WarehouseController extends Controller
                             "orderNo"=>$this->order,
                             "orderDate"=>date("Y-m-d H:i:s"),
                             "freight"=>$freight,
+                            "others"=>$other,
+                            "cnf"=>$cnf,
+                            "custom"=>$custom,
                             "amount"=>$sum,
-                            "sum"=>$freight+$sum,
+                            "sum"=>$freight+$sum+$cnf+$custom+$other,
                         ]); 
                         
                     endif;
@@ -269,5 +272,9 @@ class WarehouseController extends Controller
             })->toArray();
          return $data;
         }
+    }
+    
+    public function addCharges(Request $request){
+        dd(Input::all());
     }
 }

@@ -20,6 +20,9 @@ class CreateOrdersTable extends Migration
             $table->date("orderDate")->nullable();
             $table->decimal("amount")->nullable();
             $table->decimal("freight")->nullable();
+            $table->decimal("others")->nullable();
+            $table->decimal("cnf")->nullable();
+            $table->decimal("custom")->nullable();
             $table->decimal("sum")->nullable();
             $table->string("file")->nullable();
             $table->timestamps();

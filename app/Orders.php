@@ -15,7 +15,7 @@ class Orders extends Model
      * @var array
      */
     protected $fillable = [
-        "warehouse","orderNo","orderDate","freight","amount","sum","file",
+        "warehouse","orderNo","orderDate","freight","amount","sum","file","others","cnf","custom",
     ];
 
     /**

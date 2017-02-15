@@ -90,7 +90,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/transfer', 'WarehouseController@transfer')->name('transfer');
     Route::match(['get', 'post'],'/render', 'WarehouseController@render')->name('render');
     Route::match(['get', 'post'], '/consignments', 'WarehouseController@consignments')->name('consignments');
-    
+    Route::match(['get', 'post'], '/addCharges', 'WarehouseController@addCharges')->name('addCharges');
     
     Route::get('/download/{file}', "UtilityController@download")->name("download");
 });

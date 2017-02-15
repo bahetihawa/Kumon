@@ -154,3 +154,8 @@ $(document).ready(function(){
     });
     setTimeout(function(){ $(".alert").hide("slow"); }, 3000);
 });
+
+function addCharges(e){
+    $("form_add_charges > input[name='order']").val(e);
+    $("#addCharges").modal();
+}
