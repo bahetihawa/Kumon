@@ -156,6 +156,6 @@ $(document).ready(function(){
 });
 
 function addCharges(e){
-    $("form_add_charges > input[name='order']").val(e);
+    $("#form_add_charges > input[name='order']").val(e);
     $("#addCharges").modal();
 }

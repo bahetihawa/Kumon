@@ -275,6 +275,13 @@ class WarehouseController extends Controller
     }
     
     public function addCharges(Request $request){
-        dd(Input::all());
+       $data =  Orders::find(Input::get("order"));
+       $data->others += Input::get("other");
+       $data->freight += Input::get("freight");
+       $data->custom += Input::get("custom");
+       $data->cnf += Input::get("cnf");
+       $data->sum += Input::get("other")+Input::get("freight")+Input::get("custom")+Input::get("cnf");
+       $data->save();
+       return redirect()->back()->with(["message"=>'Record Added successfully']);
     }
 }

@@ -3,7 +3,7 @@
                         <tr>
                             <th class="text-info">Order No.</th>
                             <th>Order Date</th>
-                            <th class="text-success">Ammount</th>
+                            <th class="text-success">Amount</th>
                             <th class="text-warning">Custome</th>
                             <th class="text-warning">Freight</th>
                             <th class="text-warning">C & F</th>

@@ -93,3 +93,4 @@ function renameEntity(evt){
     el.style.display = (el.style.display !== 'block' ? 'block' : 'none' );
     y.innerHTML = (y.innerHTML !== '<span class="text-danger">Cancel</span>' ? '<span class="text-danger">Cancel</span>' : 'Add New Record');
   }
+ 
