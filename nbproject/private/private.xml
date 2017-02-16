@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/stockInputForm.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/routes/web.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/warehouse/stock.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/app/Http/Controllers/WarehouseController.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/tableConsignment.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/public/js/script.js</file>
+        </group>
+    </open-files>
+</project-private>
