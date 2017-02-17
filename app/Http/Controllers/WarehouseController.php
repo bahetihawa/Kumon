@@ -274,14 +274,28 @@ class WarehouseController extends Controller
         }
     }
     
-    public function addCharges(Request $request){
+    public function addCharges(){
+        $author = Auth::id();
        $data =  Orders::find(Input::get("order"));
        $data->others += Input::get("other");
        $data->freight += Input::get("freight");
        $data->custom += Input::get("custom");
        $data->cnf += Input::get("cnf");
-       $data->sum += Input::get("other")+Input::get("freight")+Input::get("custom")+Input::get("cnf");
+       $amt = Input::only("other","freight","cnf","custom");
+       $oc = array_sum($amt);
+       $data->sum += $oc;
        $data->save();
+       $sum = $data->sum;
+       $ratio = $oc/$sum;
+       $arr = Stoks::where("warehouse",$author)->pluck("id")->toArray();
+       foreach($arr as $vl){
+           $query = Stoks::find($vl);
+           $total = $query->unit_price * $query->count;
+           $newTotal = (1+$ratio)*$total;
+           $newPrice = $newTotal/$query->count;
+           $query->unit_price = $newPrice;
+           $query->save();
+       }
        return redirect()->back()->with(["message"=>'Record Added successfully']);
     }
 }
