@@ -1,7 +1,13 @@
 @if(isset($input) && $input =="render")
     <div class="row">
         <div class="col-md-7">
-            Instruction
+            <h4>Instruction</h4>
+            <ol>
+                    <li>File: Browse excell file containing appropriate format of sheet</li>
+                    <li>Starting Line:  Line no. of sheet where from header starts.</li>
+                    <li>Sheet No.: Index no. of sheet. Start counting from `0`. </li>
+                    
+                </ol>
         </div>
             {{ Form::open(array('url' => '/render','files'=>'true','class'=>'form col-md-5 popForm'))}}
             {!! 'Select the file to upload.' !!}<br>
@@ -18,7 +24,13 @@
 @if(isset($input) && $input =="consignment" || !isset($input))
     <div class="row">
             <div class="slideInfo col-md-7">
-              Instruction
+                <h4>Instruction:</h4>
+                <ol>
+                    <li>File: Browse excell file containing appropriate format of sheet</li>
+                    <li>Starting Line:  Line no. of sheet where from header starts.</li>
+                    <li>Sheet No.: Index no. of sheet. Start counting from `0`. </li>
+                    
+                </ol>
             </div>
             {{ Form::open(array('url' => '/create','files'=>'true','class'=>'form col-md-5 popForm'))}}
             {!! 'Select the file to upload.' !!}<br>
