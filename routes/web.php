@@ -79,11 +79,15 @@ Route::group(['middleware' => 'auth'], function() {
 	]);
     Route::get('/inventory/stockCenters', 'InventoryController@stockCenter')->name('inventory.stockCenter');
     Route::match(['get', 'post'],'/inventory/stockWarehouses/{store}', 'InventoryController@stockWarehouses')->name('inventory.stockWarehouses');
+    Route::match(['get', 'post'],'/inventory/wksLevel/{store}', 'InventoryController@wksLevel')->name('inventory.wksLevel');
+    Route::match(['get', 'post'],'/inventory/wks/{store}', 'InventoryController@wks')->name('inventory.wks');
     Route::get('/inventory/create', 'InventoryController@create')->name('inventory.create');
     Route::get('/inventory/transfer', 'InventoryController@transfer')->name('inventory.transfer');
     Route::get('/inventory/render', 'InventoryController@render')->name('inventory.render');
    
     Route::match(['get', 'post'],'/stock', 'WarehouseController@stock')->name('stock');
+    Route::match(['get', 'post'],'/wksLevel', 'WarehouseController@wksLevel')->name('wksLevel');
+    Route::match(['get', 'post'],'/wks', 'WarehouseController@wks')->name('wks');
     Route::match(['get', 'post'],'/stockCenters', 'WarehouseController@stockCenter')->name('stockCenter');
     Route::match(['get', 'post'],'/stockWarehouses', 'WarehouseController@stockWarehouses')->name('stockWarehouses');
     Route::match(['get', 'post'], '/create', 'WarehouseController@create')->name('create');

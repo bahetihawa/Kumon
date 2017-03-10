@@ -3,7 +3,9 @@
      <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-        <li><a href="{{ url('stock') }}">Availble Stock</a></li>
+        <li><a href="{{ url('stock') }}">Availble Stock : CI,NCI,Bags</a></li>
+        <li><a href="{{ url('wksLevel') }}">Availble wks: Level Wise</a></li>
+        <li><a href="{{ url('wks') }}">Availble Wks : Item Wise</a></li>
         <li><a href="{{ url('stockCenters') }}">Stock @ Centers</a></li>
         <li><a href="{{ url('consignments') }}">Consignments</a></li>
         <li><a href="{{ url('transfer') }}">Stock : Transfer @ Warehouses</a></li>

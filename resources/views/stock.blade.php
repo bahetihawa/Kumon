@@ -17,7 +17,7 @@
     </div>
     <div class="panel panel-default col-md-9">
         <div class="panel-heading row">
-            <a href="javascript:void(0)" class="col-md-6">Warehouse: </a>
+            <a href="javascript:void(0)" class="col-md-6">Warehouse: {{$wareName}}</a>
             @include('include.search')
         </div>
         <div class="panel-body">
@@ -36,7 +36,7 @@
             </div-->
             <div class="content">
                 @include("include.$include")
-                <?php echo $data->render(); ?>
+                <?php echo str_replace('/?', '?', $data->render())//$data->render(); ?>
             </div>
 	</div>
     </div>

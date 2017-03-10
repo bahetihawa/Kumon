@@ -14,6 +14,9 @@ use DB;
 use App\Category;
 use App\Item;
 use App\Stoks;
+use Illuminate\Pagination\LengthAwarePaginator;//Paginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 /*
  *  Helping quotes for phpexcel 
@@ -49,14 +52,66 @@ class WarehouseController extends Controller
         if (Input::has('search'))
         {
             $cnd = trim(Input::get('search'));
-            $data = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
+            $data = Stoks::where($cond)->where('category','!=',1)->with("Items")->whereHas('Items', function($q) use ($cnd){
             $q->where('code','like', '%'.$cnd.'%' )->orWhere('item','like', '%'.$cnd.'%');})->paginate(10);
         }else{
-           $data = Stoks::where($cond)->paginate(10);
+           $data = Stoks::where($cond)->where('category','!=',1)->paginate(10);
         }
         
         
         return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableAvailble"]);
+    }
+    public function wks(Request $request){
+        $author = Auth::id();
+        $cond = ["warehouse"=>$author];
+        $cnd = [1 ];
+        if (Input::has('search'))
+        {
+            $cnd = trim(Input::get('search'));
+            $data = Stoks::where($cond)->where('category','=',1)->with("Items")->whereHas('Items', function($q) use ($cnd){
+            $q->where('code','like', '%'.$cnd.'%' )->orWhere('item','like', '%'.$cnd.'%');})->paginate(10);
+        }else{
+           $data = Stoks::where($cond)->where('category','=',1)->paginate(10);
+        }
+        
+        
+        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableAvailble"]);
+    }
+    public function wksLevel(Request $request){
+        $wks = Category::where('category',"wks")->pluck('id');
+       $parent = $wks[0];
+       $cat = Category::where('parent',$parent)->get()->toArray();
+      foreach($cat as $cats){
+          $sCat = Category::where('parent',$cats['id'])->get()->toArray();
+          foreach ($sCat as $level){
+            $iLevel[] = $cats['category']." wks ".$level["category"];
+          }
+      }
+      //dd($iLevel);
+        $author = Auth::id();
+        $cond = ["warehouse"=>$author];
+        $cnd = [1 ];
+        if (Input::has('search'))
+        {
+            $cnd = trim(Input::get('search'));
+            //foreach ($iLevel as $k=>$lv){
+                 $data[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
+                $q->where('item','like', $cnd.'%');})->sum('count');
+            //}
+        }else{
+            foreach ($iLevel as $lv){
+                 $data[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->sum('count');
+            }
+          //->paginate(10);dd($data);
+        }
+        //$units = new Paginator($data, 1);
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $perPage = 10;
+        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock"]);
     }
     public function stockCenter(){
        $dd = Item::all()->toArray();

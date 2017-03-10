@@ -13,7 +13,9 @@
         <div class="panel-heading">Menu</div>
         <div class="panel-body">
            <ul class="list-group">
-                <li class="list-group-item"><a href="{{ url('stock') }}">Availble Stock</a></li>
+                <li class="list-group-item"><a href="{{ url('stock') }}">Availble Stock :CI,NCI, Bags</a></li>
+                <li class="list-group-item"><a href="{{ url('wksLevel') }}">Availble Wks :Level wise</a></li>
+                <li class="list-group-item"><a href="{{ url('wks') }}">Availble WKS :Item wise</a></li>
                 <li class="list-group-item"><a href="{{ url('stockCenters') }}">Stock @ Centers</a></li>
                 <li class="list-group-item"><a href="{{ url('consignments') }}">Consignments</a></li>
                 <li class="list-group-item"><a href="{{ url('transfer') }}">Stock : Transfer @ Warehouses</a></li>
@@ -32,7 +34,7 @@
             
             <div class="content">
                 @include("include.$include")
-                <?php echo $data->render(); ?>
+                <?php echo str_replace('/?', '?', $data->render())//$data->render(); ?>
             </div>
 	</div>
     </div>
