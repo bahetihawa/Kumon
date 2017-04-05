@@ -198,6 +198,7 @@ class WarehouseController extends Controller
                    }
                }
                $this->loadStacks();
+               $pp = $this->defaulPrice();
                //Stoks::where("warehouse",0)->update(["warehouse"=>$author]);
                $itemCollection = $this->itemCollection();
 		foreach ($data as $key => $value) {
@@ -245,6 +246,7 @@ class WarehouseController extends Controller
                         Consignment::where('orderNo', $x->id)->delete();
                         unlink($destinationPath."/".$fileName);
                     }
+                    $this->updatePrice($x->id,$pp);
 		}
 
             }
@@ -352,5 +354,56 @@ class WarehouseController extends Controller
            $query->save();
        }
        return redirect()->back()->with(["message"=>'Record Added successfully']);
+    }
+    public function updatePrice($order, $defalt = []){
+        $pp = $defalt;
+        //dd($pp);
+      $iLevel = $this->level_get();
+      $author = Auth::id();
+      $cond = ["warehouse"=>$author];
+      $cnd = [1 ];
+      foreach ($iLevel as $lv){
+                $data1 = Consignment::where($cond)->where('orderNo',$order)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');});
+                $qt = $data1->sum('quantity');
+                $total = $data1->sum("total");
+                $tot_amt = $total+$pp[$lv]['amt'];
+                $tot_ct = $qt+$pp[$lv]['qt'];
+                if($tot_amt !=0 && $tot_ct != 0 ):
+                $prc[$lv] = $tot_amt/$tot_ct;
+                Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->update(['unit_price'=>$prc[$lv]]);
+                endif;
+      }
+      //dd($prc);
+    }
+    public function level_get(){
+         $wks = Category::where('category',"wks")->pluck('id');
+       $parent = $wks[0];
+       $cat = Category::where('parent',$parent)->get()->toArray();
+      foreach($cat as $cats){
+          $sCat = Category::where('parent',$cats['id'])->get()->toArray();
+          foreach ($sCat as $level){
+            $iLevel[] = $cats['category']." wks ".$level["category"];
+          }
+      }
+      return $iLevel;
+    }
+    
+    public function defaulPrice(){
+      $iLevel = $this->level_get();
+      $author = Auth::id();
+      $cond = ["warehouse"=>$author];
+      $cnd = [1 ];
+      foreach ($iLevel as $lv){
+                 $count = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->sum('count');
+                 $up = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();
+               // if($count !=0 && $up != 0 ):
+                $data[$lv] = ["amt"=>$count*$up,'qt'=>$count];
+               // endif;
+      }
+      return $data;
     }
 }

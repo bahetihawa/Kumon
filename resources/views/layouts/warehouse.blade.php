@@ -18,6 +18,13 @@
                     </button>
 
                     <!-- Branding Image -->
+                     <a class="navbar-brand" href="{{ url('/') }}">
+                        <img src="/logo.jpg" style="
+                            height: auto;
+                            width: 100px;
+                            margin-top: -6px;
+                        ">
+                    </a>
                     <a class="navbar-brand" href="{{ url('/') }}">
                         {{ config('app.name', 'Laravel') }}
                     </a>

@@ -95,6 +95,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get', 'post'],'/render', 'WarehouseController@render')->name('render');
     Route::match(['get', 'post'], '/consignments', 'WarehouseController@consignments')->name('consignments');
     Route::match(['get', 'post'], '/addCharges', 'WarehouseController@addCharges')->name('addCharges');
+    Route::match(['get', 'post'], '/updatePrice', 'WarehouseController@updatePrice')->name('updatePrice');
     
     Route::get('/download/{file}', "UtilityController@download")->name("download");
 });

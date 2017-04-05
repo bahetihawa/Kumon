@@ -20,4 +20,7 @@ class Consignment extends Model
     protected $hidden = [
         'remember_token',
     ];
+     public function items(){
+        return $this->belongsTo("App\Item","item");
+    }
 }
