@@ -22,12 +22,13 @@
                         <img src="/logo.jpg" style="
                             height: auto;
                             width: 100px;
-                            margin-top: -6px;
+                            margin: -8px;
                         ">
                     </a>
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/') }}" style="border-right: 1px solid">
                         {{ config('app.name', 'Laravel') }}
                     </a>
+                    
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
