@@ -15,6 +15,7 @@ use App\Category;
 use App\Item;
 use App\Stoks;
 use App\Center;
+use App\Integration;
 use App\Render;
 use Illuminate\Pagination\LengthAwarePaginator;//Paginator;
 use Illuminate\Pagination\Paginator;
@@ -115,14 +116,26 @@ class WarehouseController extends Controller
         $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
         return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock"]);
     }
-    public function stockCenter(){
-       $dd = Item::all()->toArray();
-       $ds = array();
-        foreach($dd as $d){
-            $key = str_slug(strtolower($d["code"]),'-');
-            $ds[$key] = $d["id"];
-        }
-        return $ds;
+    public function stockCenter($cent=3){
+       $iLevel =  $this->level_get();
+       $author = Auth::id();
+      $cond = ["warehouse"=>$author,'target'=>$cent];
+      $cnd = [1 ];
+      foreach ($iLevel as $lv){
+          $data = Render::where($cond)->with("Items")->get()->toArray();
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
+                $qt = $data1->sum('quantity');dd($data);
+                $total = $data1->sum("total");
+                $tot_amt = $total+$pp[$lv]['amt'];
+                $tot_ct = $qt+$pp[$lv]['qt'];
+                if($tot_amt !=0 && $tot_ct != 0 ):
+                $prc[$lv] = $tot_amt/$tot_ct;
+                Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->update(['unit_price'=>$prc[$lv]]);
+                endif;
+      }
+       dd($iLevel);
     }
     
     public function consignments(){
@@ -133,7 +146,7 @@ class WarehouseController extends Controller
     public function transfer(){
         return "transfer";
     }
-    public function render(Request $request){
+    public function render(Request $request,$cent){
         extract(Input::All());
         $author = Auth::id();
         $rules = array(
@@ -149,18 +162,32 @@ class WarehouseController extends Controller
             {  echo "fai";
                 return redirect()->back()->withErrors($validator);
             }
-        }
+        
         if ($request->hasFile('file')) {
             $data = $this->upload($request);
-        }
+         if($data == "error"){
+            return redirect()->back()->with(["message"=>'Record Already Exists.']);
+         }
          if(!empty($data)){
              $this->issueToCenter($data, $center);
              $this->issueToCenterNci($center,$startNci);
              $this->issueToCenterCi($center,$startCi);
          }
-        $cnt = Center::pluck("centerName","id")->toArray();
-        $data = Orders::where('warehouse',$author)->orderBy('id', 'desc')->paginate(10);
-        return view("warehouse.stock",["left_title"=>"warehouse","centers"=>$cnt,'data'=>  $data,"include"=>"tableConsignment","input"=>"render"]);
+        }else{
+            redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
+        }
+        }
+        $it = Integration::where('warehouse',$author)->pluck("center");
+        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        $cnt1 = Center::pluck("centerName","id")->toArray();
+        $data = Render::distinct()->where('warehouse',$author)->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+         $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $perPage = 10;
+        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        //dd($units);
+        return view("warehouse.center",["left_title"=>"warehouse","centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableRender","input"=>"render"]);
     }
     
     public function create(Request $request){
@@ -324,7 +351,8 @@ class WarehouseController extends Controller
         $fileName = $file->getClientOriginalName();
         $destinationPath = 'uploads';
         if(file_exists($destinationPath."/".$fileName)){
-            return redirect()->back()->with(["message"=>'Record Already Exists.']);
+            $err = "error";
+            return $err;
         }else{
             $file->move($destinationPath,$fileName);
              $this->fileName = $destinationPath."/".$fileName;
@@ -418,6 +446,7 @@ class WarehouseController extends Controller
     
     public function issueToCenter(array $data, $center){
         $sub = ["MATHS"=>"ME","ENGLISH"=>"EE","ME"=>"ME","EE"=>"EE"];
+        $this->time = time();
         foreach($data as $row){
             $index = $row["subject"];
             if(isset($sub[$index])):
@@ -436,7 +465,7 @@ class WarehouseController extends Controller
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
                         "created_at"=> date("Y-m-d"),
-                        "updated_at"=> date("Y-m-d"),
+                        "updated_at"=> $this->time,
                         'filename'=>$this->fileName
                     ];
                 }
@@ -466,7 +495,7 @@ class WarehouseController extends Controller
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
                         "created_at"=> date("Y-m-d"),
-                        "updated_at"=> date("Y-m-d"),
+                        "updated_at"=> $this->time,
                         'filename'=>$this->fileName
                     ];
                 }
@@ -491,7 +520,7 @@ class WarehouseController extends Controller
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
                         "created_at"=> date("Y-m-d"),
-                        "updated_at"=> date("Y-m-d"),
+                        "updated_at"=> $this->time,
                         'filename'=>$this->fileName
                     ];
                 }

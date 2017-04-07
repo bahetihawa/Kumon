@@ -13,13 +13,10 @@
         <div class="panel-heading">Menu</div>
         <div class="panel-body">
            <ul class="list-group">
-                <li class="list-group-item"><a href="{{ url('stock') }}">Availble Stock :CI,NCI, Bags</a></li>
-                <li class="list-group-item"><a href="{{ url('wksLevel') }}">Availble Wks :Level wise</a></li>
-                <li class="list-group-item"><a href="{{ url('wks') }}">Availble WKS :Item wise</a></li>
-                <li class="list-group-item"><a href="{{ url('stockCenters') }}">Stock @ Centers</a></li>
-                <li class="list-group-item"><a href="{{ url('consignments') }}">Consignments</a></li>
-                <li class="list-group-item"><a href="{{ url('transfer') }}">Stock : Transfer @ Warehouses</a></li>
-                <li class="list-group-item"><a href="{{ url('render/0') }}">Stock : Render to Center</a></li>
+               @foreach($centers as $k=>$cent)
+               <li class="list-group-item"><a href="{{ route(Request::route()->getName(),['cent'=>$k]) }}">{{$cent}}</a></li>
+                
+                @endforeach
             </ul>
         </div>
     </div>

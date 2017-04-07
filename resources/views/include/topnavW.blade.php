@@ -9,7 +9,7 @@
         <li><a href="{{ url('stockCenters') }}">Stock @ Centers</a></li>
         <li><a href="{{ url('consignments') }}">Consignments</a></li>
         <li><a href="{{ url('transfer') }}">Stock : Transfer @ Warehouses</a></li>
-        <li><a href="{{ url('render') }}">Stock : Render to Center</a></li>
+        <li><a href="{{ url('render/0') }}">Stock : Render to Center</a></li>
     </ul>
 </li>
 
