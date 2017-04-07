@@ -14,6 +14,8 @@ use DB;
 use App\Category;
 use App\Item;
 use App\Stoks;
+use App\Center;
+use App\Render;
 use Illuminate\Pagination\LengthAwarePaginator;//Paginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -132,6 +134,7 @@ class WarehouseController extends Controller
         return "transfer";
     }
     public function render(Request $request){
+        extract(Input::All());
         $author = Auth::id();
         $rules = array(
             'file' => 'required',
@@ -151,11 +154,13 @@ class WarehouseController extends Controller
             $data = $this->upload($request);
         }
          if(!empty($data)){
-             echo "hello";
+             $this->issueToCenter($data, $center);
+             $this->issueToCenterNci($center,$startNci);
+             $this->issueToCenterCi($center,$startCi);
          }
-        
+        $cnt = Center::pluck("centerName","id")->toArray();
         $data = Orders::where('warehouse',$author)->orderBy('id', 'desc')->paginate(10);
-        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableConsignment","input"=>"render"]);
+        return view("warehouse.stock",["left_title"=>"warehouse","centers"=>$cnt,'data'=>  $data,"include"=>"tableConsignment","input"=>"render"]);
     }
     
     public function create(Request $request){
@@ -322,10 +327,14 @@ class WarehouseController extends Controller
             return redirect()->back()->with(["message"=>'Record Already Exists.']);
         }else{
             $file->move($destinationPath,$fileName);
-
+             $this->fileName = $destinationPath."/".$fileName;
             config(['excel.import.startRow' => $start]);
             $data = Excel::selectSheetsByIndex($sheet)->load($destinationPath."/".$fileName, function($reader) {
                   // $reader->noHeading();
+               // foreach ($reader->toArray() as $row) {
+                 //                           $bb[] = $row;
+                   //                     }
+            //echo '<pre>';print_r($bb );echo '</pre>';  die();
             })->toArray();
          return $data;
         }
@@ -405,5 +414,102 @@ class WarehouseController extends Controller
                // endif;
       }
       return $data;
+    }
+    
+    public function issueToCenter(array $data, $center){
+        $sub = ["MATHS"=>"ME","ENGLISH"=>"EE","ME"=>"ME","EE"=>"EE"];
+        foreach($data as $row){
+            $index = $row["subject"];
+            if(isset($sub[$index])):
+             $item_group =  @$sub[$index]." WKS ".$row["level"];
+            endif;
+            foreach ($row as $key=>$rows){
+                if(is_numeric($key)):
+                 $item_key = $item_group." ".$this->zeroPadding($key);
+                $item_code = Item::where("item","like","%".$item_key."%")->pluck("id")->toArray();
+                if(($item_code) && $rows > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$rows,
+                        "target"=>$center,
+                        "targetType"=>1,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> date("Y-m-d"),
+                        "updated_at"=> date("Y-m-d"),
+                        'filename'=>$this->fileName
+                    ];
+                }
+              //  $item[$item_code] = $rows;
+                endif;
+            }
+        }
+        Render::insert($item);
+        //echo $this->fileName;die;
+       //dd($item);
+    }
+    public function issueToCenterNci($center,$start=11){
+        $sheet=1;
+        $item=[];
+       config(['excel.import.startRow' => $start]);
+            $data = Excel::selectSheetsByIndex($sheet)->load($this->fileName, function($reader) {
+                  // $reader->noHeading();
+            })->toArray();//dd($data);
+            foreach($data as $row){
+                $item_code = Item::where("code","=",$row['itemcode'])->pluck("id")->toArray();
+                if(($item_code) && $row["qty_order"] > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$row["qty_order"],
+                        "target"=>$center,
+                        "targetType"=>1,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> date("Y-m-d"),
+                        "updated_at"=> date("Y-m-d"),
+                        'filename'=>$this->fileName
+                    ];
+                }
+            }//dd($item);
+        Render::insert($item);
+    }
+    public function issueToCenterCi($center,$start=17){
+        $sheet=2;
+        $item=[];
+       config(['excel.import.startRow' => $start]);
+            $data = Excel::selectSheetsByIndex($sheet)->load($this->fileName, function($reader) {
+                  // $reader->noHeading();
+            })->toArray();//dd($data);
+            foreach($data as $row){
+                $item_code = Item::where("code","=",$row['code'])->pluck("id")->toArray();
+                if(($item_code) && $row["qty_ordered"] > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$row["qty_ordered"],
+                        "target"=>$center,
+                        "targetType"=>1,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> date("Y-m-d"),
+                        "updated_at"=> date("Y-m-d"),
+                        'filename'=>$this->fileName
+                    ];
+                }
+            }//dd($item);
+         Render::insert($item);
+    }
+    public function zeroPadding($x){
+        $ct =  strlen($x);
+        switch ($ct){
+            case 1:
+                return  "00".$x;
+                break;
+            case 2:
+                return  "0".$x;
+                break;
+            default :
+                return  $x;
+                break;
+        }
     }
 }

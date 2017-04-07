@@ -10,13 +10,19 @@
                 </ol>
         </div>
             {{ Form::open(array('url' => '/render','files'=>'true','class'=>'form col-md-5 popForm'))}}
+            {!! 'Select a Center.' !!}<br>
+            {!! Form::select('center',$centers,null, ['class' => 'form-control']) !!}<hr>
             {!! 'Select the file to upload.' !!}<br>
-            {!! Form::file('file',['class' => 'form-control']) !!}
+            {!! Form::file('file',['class' => 'form-control']) !!}<hr>
               
-            {!! 'Enter Starting Line.' !!}<br>
-            {{ Form::number('start', '6', array('class' => 'form-control')) }}
+            {!! 'Enter Starting Line For Worksheet.' !!}<br>
+            {{ Form::number('start', '12', array('class' => 'form-control')) }}
+            {!! 'Enter Starting Line For NCI.' !!}<br>
+            {{ Form::number('startNci', '11', array('class' => 'form-control')) }}
+            {!! 'Enter Starting Line For CI.' !!}<br>
+            {{ Form::number('startCi', '17', array('class' => 'form-control')) }}
             {!! 'Enter Sheet No.' !!}<br>
-            {{ Form::number('sheet', '0', array('class' => 'form-control')) }}<br>
+            {{ Form::number('sheet', '0', array('class' => 'hide form-control')) }}<br>
             {!! Form::submit('Upload File',['class' => 'form-control', 'onclick'=>"return (confirm('Please confirm all field are filled correctly ?'))"]) !!}
             {!! Form::close() !!}
     </div>

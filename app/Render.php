@@ -9,7 +9,7 @@ class Render extends Model
      use Notifiable;
      
      protected $fillable = [
-        
+        'item','quantity','target','targetType' ,'warehouse','created_at','updated_at','filename'
     ];
 
     /**
