@@ -100,13 +100,28 @@ class WarehouseController extends Controller
             //foreach ($iLevel as $k=>$lv){
                  $data[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
                 $q->where('item','like', $cnd.'%');})->sum('count');
+                 $prc[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
+                $q->where('item','like', '%'.$cnd.'%');})->pluck('unit_price')->first();
+                
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
+                $q->where('item','like', '%'.$cnd.'%');});
+                $qt = $data1->sum('quantity');
+                $data_cnt[$cnd] = $qt;
             //}
         }else{
             foreach ($iLevel as $lv){
                  $data[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
                 $q->where('item','like', $lv.'%');})->sum('count');
+                $prc[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();//->pluck('unit_price');
+                
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
+                $qt = $data1->sum('quantity');
+                $data_cnt[$lv] = $qt;
             }
           //->paginate(10);dd($data);
+            //dd($prc);
         }
         //$units = new Paginator($data, 1);
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -114,28 +129,66 @@ class WarehouseController extends Controller
         $perPage = 10;
         $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
         $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
-        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock"]);
+        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock",'unit_price'=>$prc,'countCenter'=>$data_cnt]);
     }
-    public function stockCenter($cent=3){
+    public function stockCenter($cent){
        $iLevel =  $this->level_get();
        $author = Auth::id();
       $cond = ["warehouse"=>$author,'target'=>$cent];
-      $cnd = [1 ];
+      if (Input::has('search'))
+        {
+            $lv = trim(Input::get('search'));
+            $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
+                $qt = $data1->sum('quantity');
+                $data[$lv] = $qt;
+                
+                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();
+        }else{
       foreach ($iLevel as $lv){
-          $data = Render::where($cond)->with("Items")->get()->toArray();
+         
                 $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
                 $q->where('item','like', '%'.$lv.'%');});
-                $qt = $data1->sum('quantity');dd($data);
-                $total = $data1->sum("total");
-                $tot_amt = $total+$pp[$lv]['amt'];
-                $tot_ct = $qt+$pp[$lv]['qt'];
-                if($tot_amt !=0 && $tot_ct != 0 ):
-                $prc[$lv] = $tot_amt/$tot_ct;
-                Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', $lv.'%');})->update(['unit_price'=>$prc[$lv]]);
-                endif;
+                $qt = $data1->sum('quantity');
+                $data[$lv] = $qt;
+                
+                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();
       }
-       dd($iLevel);
+        }
+        if($cent ==0){ $data =[];}
+        $it = Integration::where('warehouse',$author)->pluck("center");
+        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        $cnt1 = Center::pluck("centerName","id")->toArray();
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $perPage = 10;
+        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        $left =  $cent !=0 ? Center::where('id',$cent)->pluck("centerName")->toArray()[0] : "";
+        return view("warehouse.center",["left_title"=>$left,"centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableCenterStock","input"=>"centerSock",'unit_price'=>$prc]);
+    }
+    public function stockCenterCiNci($cent){
+       $author = Auth::id();
+      $cond = ["warehouse"=>$author,'target'=>$cent];
+      
+     
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q){
+                $q->where('category','!=',1);})->get()->toArray();
+               
+                $data = $data1;
+        if($cent ==0){ $data =[];}
+        $it = Integration::where('warehouse',$author)->pluck("center");
+        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        $cnt1 = Center::pluck("centerName","id")->toArray();
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $perPage = 10;
+        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        $left =  $cent !=0 ? Center::where('id',$cent)->pluck("centerName")->toArray()[0] : "";//dd($units);
+        return view("warehouse.center",["left_title"=>$left,"centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableCenterCiNci","input"=>"centerSock"]);
     }
     
     public function consignments(){

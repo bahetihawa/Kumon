@@ -88,7 +88,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get', 'post'],'/stock', 'WarehouseController@stock')->name('stock');
     Route::match(['get', 'post'],'/wksLevel', 'WarehouseController@wksLevel')->name('wksLevel');
     Route::match(['get', 'post'],'/wks', 'WarehouseController@wks')->name('wks');
-    Route::match(['get', 'post'],'/stockCenters', 'WarehouseController@stockCenter')->name('stockCenter');
+    Route::match(['get', 'post'],'/stockCenters/{cent}', 'WarehouseController@stockCenter')->name('stockCenter');
+    Route::match(['get', 'post'],'/stockCentersCiNci/{cent}', 'WarehouseController@stockCenterCiNci')->name('stockCentersCiNci');
     Route::match(['get', 'post'],'/stockWarehouses', 'WarehouseController@stockWarehouses')->name('stockWarehouses');
     Route::match(['get', 'post'], '/create', 'WarehouseController@create')->name('create');
     Route::get('/transfer', 'WarehouseController@transfer')->name('transfer');
@@ -98,4 +99,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get', 'post'], '/updatePrice', 'WarehouseController@updatePrice')->name('updatePrice');
     
     Route::get('/download/{file}', "UtilityController@download")->name("download");
+    Route::get('/downloadRender/{file}', "UtilityController@downloadRender")->name("downloadRender");
+    Route::get('/getGrn/{file}', "UtilityController@getGrn")->name("getGrn");
 });

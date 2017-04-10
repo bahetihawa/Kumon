@@ -9,7 +9,7 @@
                     
                 </ol>
         </div>
-            {{ Form::open(array('url' => '/render','files'=>'true','class'=>'form col-md-5 popForm'))}}
+            {{ Form::open(array('url' => '/render/0','files'=>'true','class'=>'form col-md-5 popForm'))}}
             {!! 'Select a Center.' !!}<br>
             {!! Form::select('center',$centers,null, ['class' => 'form-control']) !!}<hr>
             {!! 'Select the file to upload.' !!}<br>

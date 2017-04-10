@@ -11,7 +11,9 @@ use App\Center;
 use App\Warehouse;
 use App\Item;
 use App\Orders;
+use App\Render;
 use Input;
+use Excel;
 use Illuminate\Support\Facades\Auth;
 class UtilityController extends Controller
 {
@@ -80,5 +82,30 @@ class UtilityController extends Controller
         header("Content-Transfer-Encoding: binary");    
         readfile($filename);
         return back();
+    }
+    
+    public function getGrn($file){
+        $data = Render::where("updated_at",$file)->with('Items')->get()->toArray();
+        $ct =   Auth::id();
+        $center = Warehouse::where("id",$ct)->get()->toArray()[0];
+       // if()
+        //echo date("d-m-y",strtotime($file));die;
+        Excel::create($file, function($excel) use ($file,$data,$center) {
+
+            // Set the title
+            $excel->setTitle('GRN_'.$file);
+            // Chain the setters
+            $excel->setCreator('Roster')
+                  ->setCompany('Kumon');
+            // Call them separately
+            $excel->setDescription('GRN of ');
+            
+            $excel->sheet($file, function($sheet) use ($file,$data,$center){
+
+                $sheet->loadView('grn',["data"=>$data,'center'=>$center,'date'=>$file]);
+
+            });
+
+        })->export('xlsx');
     }
 }
