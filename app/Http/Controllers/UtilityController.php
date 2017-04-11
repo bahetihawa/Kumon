@@ -88,9 +88,9 @@ class UtilityController extends Controller
         $data = Render::where("updated_at",$file)->with('Items')->get()->toArray();
         $ct =   Auth::id();
         $center = Warehouse::where("id",$ct)->get()->toArray()[0];
-       // if()
+       $code = $this->getCodeRef("GRN",$center['centerCode'],$file);
         //echo date("d-m-y",strtotime($file));die;
-        Excel::create($file, function($excel) use ($file,$data,$center) {
+        Excel::create($file, function($excel) use ($file,$data,$center,$code) {
 
             // Set the title
             $excel->setTitle('GRN_'.$file);
@@ -100,12 +100,24 @@ class UtilityController extends Controller
             // Call them separately
             $excel->setDescription('GRN of ');
             
-            $excel->sheet($file, function($sheet) use ($file,$data,$center){
+            $excel->sheet($file, function($sheet) use ($file,$data,$center,$code){
 
-                $sheet->loadView('grn',["data"=>$data,'center'=>$center,'date'=>$file]);
+                $sheet->loadView('grn',["data"=>$data,'center'=>$center,'date'=>$file,'grnRef'=>$code]);
 
             });
 
         })->export('xlsx');
+    }
+    public function getCodeRef($text,$center,$time){
+        $month =  $date = date('m', $time);
+        $year = date('y', $time);
+        if($month > 3){
+            $code = $month-3;
+            $ses = $year."-".($year+1);
+        }else{
+            $code = $month+9;
+            $ses = ($year-1)."-".$year;
+        }
+        return $text."/".$center."/".$ses."/".str_pad($code, 3, '0', STR_PAD_LEFT);
     }
 }

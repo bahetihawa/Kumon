@@ -59,7 +59,7 @@
             {!!'<td></td>'!!}
             @endfor
             <td>GRN No.</td>
-            <td colspan="2"></td>
+            <td colspan="2">{{$grnRef}}</td>
         </tr>
         <tr>
             <td>Contact</td>

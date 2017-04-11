@@ -18,9 +18,9 @@
                 <li class="list-group-item"><a href="{{ url('wks') }}">Availble WKS :Item wise</a></li>
                 <li class="list-group-item"><a href="{{ url('stockCenters/0') }}">Wks Stock @ Centers</a></li>
                 <li class="list-group-item"><a href="{{ url('stockCentersCiNci/0') }}">CI/NCI Stock @ Centers</a></li>
-                <li class="list-group-item"><a href="{{ url('consignments') }}">Consignments</a></li>
+                <li class="list-group-item"><a href="{{ url('consignments') }}">Purchase Orders</a></li>
                 <li class="list-group-item"><a href="{{ url('transfer') }}">Stock : Transfer @ Warehouses</a></li>
-                <li class="list-group-item"><a href="{{ url('render/0') }}">Stock : Render to Center</a></li>
+                <li class="list-group-item"><a href="{{ url('render/0') }}">Stock : Issue to Center</a></li>
             </ul>
         </div>
     </div>

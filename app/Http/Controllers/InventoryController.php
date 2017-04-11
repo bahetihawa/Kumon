@@ -10,6 +10,7 @@ use DB;
 use App\Orders;
 use App\Category;
 use App\Item;
+use App\Render;
 use Illuminate\Pagination\LengthAwarePaginator;//Paginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -37,8 +38,9 @@ class InventoryController extends Controller
        }else{
             $data = Orders::orderBy('id', 'desc')->paginate(10);
        }
-        $w = Warehouse::all();
-        return view("stock",["left_title"=>"Orders",'data'=>  $data,"include"=>"tableConsignment",'warehouse'=>$w]);
+        $w = Warehouse::all();  
+        $store != 0 ? $w1 = Warehouse::where('id',$store)->pluck('centerName')->toArray()[0] : $w1 ="All Warehouses";//dd($store);
+        return view("stock",["left_title"=>"Orders",'data'=>  $data,"include"=>"tableConsignment",'warehouse'=>$w,'wareName'=>$w1]);
     }
     public function stockCenter(){
         return "stockCenter";
@@ -144,10 +146,22 @@ class InventoryController extends Controller
             
                  $data[$lv] = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Item")->whereHas('Items', function($q) use ($lv){
                 $q->where('item','like', $lv.'%');})->sum('count');
+                 $prc[$lv] = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->pluck('unit_price')->first();
+                $data1 = Render::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
+                $qt = $data1->sum('quantity');
+                $data_cnt[$lv] = $qt;
             
         else:
             $data[$lv] = Stoks::where(['category'=>1])->with("Item")->whereHas('Items', function($q) use ($lv){
                 $q->where('item','like', $lv.'%');})->sum('count');
+                 $prc[$lv] = Stoks::where(['category'=>1])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->pluck('unit_price')->first();
+                $data1 = Render::with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
+                $qt = $data1->sum('quantity');
+                $data_cnt[$lv] = $qt;
             
         endif;
         endforeach;
@@ -158,7 +172,7 @@ class InventoryController extends Controller
         $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
         $w = Warehouse::all();
         $wareName = Warehouse::where("id",$author)->pluck("centerName")->first();//dd($wareName);
-        return view("stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock",'warehouse'=>$w,"wareName"=>$wareName]);
+        return view("stock",["left_title"=>"warehouse",'data'=>  $units,'unit_price'=>$prc,"include"=>"tableLevelStock",'warehouse'=>$w,"wareName"=>$wareName,'countCenter'=>$data_cnt]);
     }
     public function create(){
         return "create";
