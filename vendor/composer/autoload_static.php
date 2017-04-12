@@ -876,6 +876,7 @@ class ComposerStaticInit12b52cad209d91823cf093922f4b8381
         'TestCase' => __DIR__ . '/../..' . '/tests/TestCase.php',
         'Text_Template' => __DIR__ . '/..' . '/phpunit/php-text-template/src/Template.php',
         'TriggerRender' => __DIR__ . '/../..' . '/database/migrations/2017_04_06_122906_trigger_render.php',
+        'TriggerTransfer' => __DIR__ . '/../..' . '/database/migrations/2017_04_12_122012_trigger_transfer.php',
         'UsersTableSeeder' => __DIR__ . '/../..' . '/database/seeds/UsersTableSeeder.php',
     );
 

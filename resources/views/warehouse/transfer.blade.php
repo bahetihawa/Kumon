@@ -7,20 +7,19 @@
     @if(isset($input) && $input =="render")
         New Record
     @endif
+    @if(isset($input) && $input =="transfer")
+        New Record
+    @endif
 @endsection
 @section('content')
     <div class="panel panel-default col-md-3 left-nav">
         <div class="panel-heading">Menu</div>
         <div class="panel-body">
            <ul class="list-group">
-                <li class="list-group-item"><a href="{{ url('stock') }}">Availble Stock :CI,NCI, Bags</a></li>
-                <li class="list-group-item"><a href="{{ url('wksLevel') }}">Availble Wks :Level wise</a></li>
-                <li class="list-group-item"><a href="{{ url('wks') }}">Availble WKS :Item wise</a></li>
-                <li class="list-group-item"><a href="{{ url('stockCenters/0') }}">Wks Stock @ Centers</a></li>
-                <li class="list-group-item"><a href="{{ url('stockCentersCiNci/0') }}">CI/NCI Stock @ Centers</a></li>
-                <li class="list-group-item"><a href="{{ url('consignments') }}">Purchase Orders</a></li>
-                <li class="list-group-item"><a href="{{ url('transfer/0') }}">Stock : Transfer @ Warehouses</a></li>
-                <li class="list-group-item"><a href="{{ url('render/0') }}">Stock : Issue to Center</a></li>
+               @foreach($centers as $k=>$cent)
+               <li class="list-group-item"><a href="{{ route(Request::route()->getName(),['cent'=>$k]) }}">{{$cent}}</a></li>
+                
+                @endforeach
             </ul>
         </div>
     </div>

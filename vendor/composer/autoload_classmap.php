@@ -583,5 +583,6 @@ return array(
     'TestCase' => $baseDir . '/tests/TestCase.php',
     'Text_Template' => $vendorDir . '/phpunit/php-text-template/src/Template.php',
     'TriggerRender' => $baseDir . '/database/migrations/2017_04_06_122906_trigger_render.php',
+    'TriggerTransfer' => $baseDir . '/database/migrations/2017_04_12_122012_trigger_transfer.php',
     'UsersTableSeeder' => $baseDir . '/database/seeds/UsersTableSeeder.php',
 );

@@ -12,10 +12,13 @@ use App\Warehouse;
 use App\Item;
 use App\Orders;
 use App\Render;
+use App\Transfer;
 use Input;
 use Excel;
 use App\Stoks;
 use App\Consignment;
+use App\Integration;
+use App\user;
 use Illuminate\Support\Facades\Auth;
 class UtilityController extends Controller
 {
@@ -91,13 +94,13 @@ class UtilityController extends Controller
         $data = Consignment::where("orderNo",$file)->with('Items')->get()->toArray();
         $ct =   Auth::id();
         $center = Warehouse::where("id",$ct)->get()->toArray()[0];
-       $code = $this->getCodeRef("GRN",$center['centerCode'],$file);
+       $code = $this->getCodeRef("GRN",$center['centerCode'],  time());
         
         $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
         $center['province'] = Province::where('id',$center['province'])->pluck('province')[0];
         $center['district'] = District::where('id',$center['district'])->pluck('district')[0];
        //dd($center);
-        Excel::create('GRN_'.$file, function($excel) use ($file,$data,$center,$code,$order) {
+        Excel::create('GRN_'.$code, function($excel) use ($file,$data,$center,$code,$order) {
 
             // Set the title
             $excel->setTitle('GRN_'.$file);
@@ -126,10 +129,10 @@ class UtilityController extends Controller
         $center['province'] = Province::where('id',$center['province'])->pluck('province')[0];
         $center['district'] = District::where('id',$center['district'])->pluck('district')[0];
        //dd($center);
-        Excel::create('GRN_'.$file, function($excel) use ($file,$data,$center,$code,$prc) {
+        Excel::create('DN_'.$code, function($excel) use ($file,$data,$center,$code,$prc) {
 
             // Set the title
-            $excel->setTitle('GRN_'.$file);
+            $excel->setTitle('DN_'.$file);
             // Chain the setters
             $excel->setCreator('Roster')
                   ->setCompany('Kumon');
@@ -155,5 +158,43 @@ class UtilityController extends Controller
             $ses = ($year-1)."-".$year;
         }
         return $text."/".$center."/".$ses."/".str_pad($code, 3, '0', STR_PAD_LEFT);
+    }
+    public function getCent(){
+        $id = Input::get('id');
+        $it = User::join('warehouses', 'warehouses.id', '=', 'users.frenchise')->where('warehouses.id',$id)->pluck('users.id')->toArray();
+
+        $cnt = Center::join('integrations','integrations.center','=','centers.id')->whereIn('integrations.warehouse',$it)->pluck("centerName","centers.id")->toArray();
+//print_r($it);die;
+        return view("warehouse.option",['data'=>$cnt]);
+    }
+    
+    public function getTn($file){
+       // $order = Orders::where('updated_at',$file)->pluck('orderNo')[0];
+        $data = Transfer::where("updated_at",$file)->with('Items')->get()->toArray();
+        $ct =   Auth::id();
+        $center = Warehouse::where("id",$ct)->get()->toArray()[0];
+       $code = $this->getCodeRef("DN",$center['centerCode'],$file);
+        $prc = Stoks::where('warehouse',$ct)->pluck('unit_price','specify')->toArray();
+        $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
+        $center['province'] = Province::where('id',$center['province'])->pluck('province')[0];
+        $center['district'] = District::where('id',$center['district'])->pluck('district')[0];
+       //dd($center);
+        Excel::create('TN_'.$code, function($excel) use ($file,$data,$center,$code,$prc) {
+
+            // Set the title
+            $excel->setTitle('TN_'.$file);
+            // Chain the setters
+            $excel->setCreator('Roster')
+                  ->setCompany('Kumon');
+            // Call them separately
+            $excel->setDescription('GRN of ');
+            
+            $excel->sheet($file, function($sheet) use ($file,$data,$center,$code,$prc){
+
+                $sheet->loadView('tn',["data"=>$data,'center'=>$center,'date'=>$file,'grnRef'=>$code,'price'=>$prc]);
+
+            });
+
+        })->export('xlsx');
     }
 }

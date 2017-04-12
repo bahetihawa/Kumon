@@ -17,6 +17,8 @@ use App\Stoks;
 use App\Center;
 use App\Integration;
 use App\Render;
+use App\Transfer;
+use App\Warehouse;
 use Illuminate\Pagination\LengthAwarePaginator;//Paginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -196,8 +198,53 @@ class WarehouseController extends Controller
         $data = Orders::where('warehouse',$author)->orderBy('id', 'desc')->paginate(10);
         return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableConsignment","input"=>"consignment"]);
     }
-    public function transfer(){
-        return "transfer";
+    public function transfer(Request $request,$cent){
+        extract(Input::All());
+        $author = Auth::id();
+        $rules = array(
+            'file' => 'required',
+            'start' => 'required',
+            'sheet' => 'required',
+        );
+     //   dd($request);
+        if($request->isMethod('post')){
+            $validator = Validator::make(Input::all(), $rules);
+             // process the form
+            if ($validator->fails()) 
+            {  echo "fai";
+                return redirect()->back()->withErrors($validator);
+            }
+        
+        if ($request->hasFile('file')) {
+            $data = $this->upload($request);
+         if($data == "error"){
+            return redirect()->back()->with(["message"=>'Record Already Exists.']);
+         }
+         if(!empty($data)){
+             $this->tranferToCenter($data, $center);
+             $this->tranferToCenterNci($center,$startNci);
+             $this->tranferToCenterCi($center,$startCi);
+         }
+        }else{
+            redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
+        }
+        }
+        $it = Integration::where('warehouse',$author)->pluck("center");
+        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        $cnt1 = Center::pluck("centerName","id")->toArray();
+        $w = Warehouse::pluck("centerName","id")->toArray();//ar
+        $w[0] = "--Select--";
+        ksort($w);
+        //dd($w);
+        $data = Transfer::distinct()->where('warehouse',$author)->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+         $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $perPage = 10;
+        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        //dd($units);
+        return view("warehouse.transfer",["left_title"=>"warehouse","centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableTransfer","input"=>"transfer",'wareh'=>$w]);
+    
     }
     public function render(Request $request,$cent){
         extract(Input::All());
@@ -593,5 +640,88 @@ class WarehouseController extends Controller
                 return  $x;
                 break;
         }
+    }
+    public function tranferToCenter(array $data, $center){
+        $sub = ["MATHS"=>"ME","ENGLISH"=>"EE","ME"=>"ME","EE"=>"EE"];
+        $this->time = time();
+        foreach($data as $row){
+            $index = $row["subject"];
+            if(isset($sub[$index])):
+             $item_group =  @$sub[$index]." WKS ".$row["level"];
+            endif;
+            foreach ($row as $key=>$rows){
+                if(is_numeric($key)):
+                 $item_key = $item_group." ".$this->zeroPadding($key);
+                $item_code = Item::where("item","like","%".$item_key."%")->pluck("id")->toArray();
+                if(($item_code) && $rows > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$rows,
+                        "target"=>$center,
+                        "targetType"=>1,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> date("Y-m-d"),
+                        "updated_at"=> $this->time,
+                        'filename'=>$this->fileName
+                    ];
+                }
+              //  $item[$item_code] = $rows;
+                endif;
+            }
+        }
+        Transfer::insert($item);
+        //echo $this->fileName;die;
+       //dd($item);
+    }
+    public function tranferToCenterNci($center,$start=11){
+        $sheet=1;
+        $item=[];
+       config(['excel.import.startRow' => $start]);
+            $data = Excel::selectSheetsByIndex($sheet)->load($this->fileName, function($reader) {
+                  // $reader->noHeading();
+            })->toArray();//dd($data);
+            foreach($data as $row){
+                $item_code = Item::where("code","=",$row['itemcode'])->pluck("id")->toArray();
+                if(($item_code) && $row["qty_order"] > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$row["qty_order"],
+                        "target"=>$center,
+                        "targetType"=>1,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> date("Y-m-d"),
+                        "updated_at"=> $this->time,
+                        'filename'=>$this->fileName
+                    ];
+                }
+            }//dd($item);
+        Transfer::insert($item);
+    }
+    public function tranferToCenterCi($center,$start=17){
+        $sheet=2;
+        $item=[];
+       config(['excel.import.startRow' => $start]);
+            $data = Excel::selectSheetsByIndex($sheet)->load($this->fileName, function($reader) {
+                  // $reader->noHeading();
+            })->toArray();//dd($data);
+            foreach($data as $row){
+                $item_code = Item::where("code","=",$row['code'])->pluck("id")->toArray();
+                if(($item_code) && $row["qty_ordered"] > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$row["qty_ordered"],
+                        "target"=>$center,
+                        "targetType"=>1,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> date("Y-m-d"),
+                        "updated_at"=> $this->time,
+                        'filename'=>$this->fileName
+                    ];
+                }
+            }//dd($item);
+         Transfer::insert($item);
     }
 }

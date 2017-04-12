@@ -8,7 +8,7 @@
         <tr>
             <td colspan="4"><b>Kumon India Education Private Limited</b></td>
             <td colspan="3"></td>
-            <td colspan="4"><strong>Dispatch Note (DN)</strong></td>
+            <td colspan="4"><strong>Transfer Note (TN)</strong></td>
         </tr>
          <tr>
             <td colspan="4">Regd. Office: 14A & 14B, Vasant Square Mall, </td>

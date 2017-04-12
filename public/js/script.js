@@ -163,3 +163,9 @@ $(".modal-body form").submit(function(){
     $(this).hide();
    $(this).before("<label class='container text-center'>Pleas wait while we are proccessing your request.<br>Don't refresh the page meanwhile.</label>"); 
 });
+$(".selectW").change(function(){
+    var v = $(this).val();
+    $.post("../getCent",{id:v},function(res){
+        $('.selectC').html(res);
+    });
+});

@@ -92,7 +92,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get', 'post'],'/stockCentersCiNci/{cent}', 'WarehouseController@stockCenterCiNci')->name('stockCentersCiNci');
     Route::match(['get', 'post'],'/stockWarehouses', 'WarehouseController@stockWarehouses')->name('stockWarehouses');
     Route::match(['get', 'post'], '/create', 'WarehouseController@create')->name('create');
-    Route::get('/transfer', 'WarehouseController@transfer')->name('transfer');
+    Route::match(['get', 'post'],'/transfer/{cent}', 'WarehouseController@transfer')->name('transfer');
     Route::match(['get', 'post'],'/render/{cent}', 'WarehouseController@render')->name('render');
     Route::match(['get', 'post'], '/consignments', 'WarehouseController@consignments')->name('consignments');
     Route::match(['get', 'post'], '/addCharges', 'WarehouseController@addCharges')->name('addCharges');
@@ -102,4 +102,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/downloadRender/{file}', "UtilityController@downloadRender")->name("downloadRender");
     Route::get('/getGrn/{file}', "UtilityController@getGrn")->name("getGrn");
     Route::get('/getDn/{file}', "UtilityController@getDn")->name("getDn");
+    Route::get('/getTn/{file}', "UtilityController@getTn")->name("getTn");
+    Route::match(['get','post'],'/getCent', "UtilityController@getCent")->name("getCent");
 });
