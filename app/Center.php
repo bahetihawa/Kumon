@@ -13,7 +13,7 @@ class Center extends Model
      * @var array
      */
     protected $fillable = [
-		'centerName','centerCode','concern','address','country','province','district','email','phone',
+		'centerName','centerCode','concern','address','country','province','district','email','phone','tin','cst',
     ];
 	
     /**

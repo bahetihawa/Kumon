@@ -14,6 +14,8 @@ use App\Orders;
 use App\Render;
 use Input;
 use Excel;
+use App\Stoks;
+use App\Consignment;
 use Illuminate\Support\Facades\Auth;
 class UtilityController extends Controller
 {
@@ -85,12 +87,17 @@ class UtilityController extends Controller
     }
     
     public function getGrn($file){
-        $data = Render::where("updated_at",$file)->with('Items')->get()->toArray();
+        $order = Orders::where('id',$file)->pluck('orderNo')[0];
+        $data = Consignment::where("orderNo",$file)->with('Items')->get()->toArray();
         $ct =   Auth::id();
         $center = Warehouse::where("id",$ct)->get()->toArray()[0];
        $code = $this->getCodeRef("GRN",$center['centerCode'],$file);
-        //echo date("d-m-y",strtotime($file));die;
-        Excel::create($file, function($excel) use ($file,$data,$center,$code) {
+        
+        $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
+        $center['province'] = Province::where('id',$center['province'])->pluck('province')[0];
+        $center['district'] = District::where('id',$center['district'])->pluck('district')[0];
+       //dd($center);
+        Excel::create('GRN_'.$file, function($excel) use ($file,$data,$center,$code,$order) {
 
             // Set the title
             $excel->setTitle('GRN_'.$file);
@@ -100,9 +107,38 @@ class UtilityController extends Controller
             // Call them separately
             $excel->setDescription('GRN of ');
             
-            $excel->sheet($file, function($sheet) use ($file,$data,$center,$code){
+            $excel->sheet($file, function($sheet) use ($file,$data,$center,$code,$order){
 
-                $sheet->loadView('grn',["data"=>$data,'center'=>$center,'date'=>$file,'grnRef'=>$code]);
+                $sheet->loadView('grn',["data"=>$data,'center'=>$center,'date'=>$file,'grnRef'=>$code,'invoice'=>$order]);
+
+            });
+
+        })->export('xlsx');
+    }
+    public function getDn($file){
+       // $order = Orders::where('updated_at',$file)->pluck('orderNo')[0];
+        $data = Render::where("updated_at",$file)->with('Items')->get()->toArray();
+        $ct =   Auth::id();
+        $center = Warehouse::where("id",$ct)->get()->toArray()[0];
+       $code = $this->getCodeRef("DN",$center['centerCode'],$file);
+        $prc = Stoks::where('warehouse',$ct)->pluck('unit_price','specify')->toArray();
+        $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
+        $center['province'] = Province::where('id',$center['province'])->pluck('province')[0];
+        $center['district'] = District::where('id',$center['district'])->pluck('district')[0];
+       //dd($center);
+        Excel::create('GRN_'.$file, function($excel) use ($file,$data,$center,$code,$prc) {
+
+            // Set the title
+            $excel->setTitle('GRN_'.$file);
+            // Chain the setters
+            $excel->setCreator('Roster')
+                  ->setCompany('Kumon');
+            // Call them separately
+            $excel->setDescription('GRN of ');
+            
+            $excel->sheet($file, function($sheet) use ($file,$data,$center,$code,$prc){
+
+                $sheet->loadView('dn',["data"=>$data,'center'=>$center,'date'=>$file,'grnRef'=>$code,'price'=>$prc]);
 
             });
 

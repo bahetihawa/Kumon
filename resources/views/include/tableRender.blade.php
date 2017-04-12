@@ -20,7 +20,7 @@
                              
                             <td class="text-center">
                                 <a href="{{ route('downloadRender',['file'=> $time]) }}" style="background: #c5dfef;">&nbsp;</i>Get Excel&nbsp;</a> |
-                                 <a href="{{ route('getGrn',['file'=> $time]) }}" style="background: #c5dfef;">&nbsp;</i>Get GRN&nbsp;</a> 
+                                 <a href="{{ route('getDn',['file'=> $time]) }}" style="background: #c5dfef;">&nbsp;</i>Get DN&nbsp;</a> 
                               
                             </td>
                            

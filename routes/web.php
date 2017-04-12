@@ -101,4 +101,5 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/download/{file}', "UtilityController@download")->name("download");
     Route::get('/downloadRender/{file}', "UtilityController@downloadRender")->name("downloadRender");
     Route::get('/getGrn/{file}', "UtilityController@getGrn")->name("getGrn");
+    Route::get('/getDn/{file}', "UtilityController@getDn")->name("getDn");
 });

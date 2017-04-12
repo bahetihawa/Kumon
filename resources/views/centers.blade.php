@@ -74,6 +74,26 @@
 					  </span>
 					  @endif
 				  </div>
+                                  <div class="col-md-6">
+					<label for="concern" class="control-label">TIN No.:</label>
+					  <input id="tin" type="text" class="form-control" name="tin" value="{{ old('tin') }}" required autofocus >
+					  
+					  @if ($errors->has('tin'))
+					  <span class="help-block">
+						  <strong>{{ $errors->first('tin') }}</strong>
+					  </span>
+					  @endif
+				  </div>
+                                  <div class="col-md-6">
+					<label for="concern" class="control-label">CST:</label>
+					  <input id="cst" type="text" class="form-control" name="cst" value="{{ old('cst') }}" required autofocus >
+					  
+					  @if ($errors->has('cst'))
+					  <span class="help-block">
+						  <strong>{{ $errors->first('cst') }}</strong>
+					  </span>
+					  @endif
+				  </div>
 				  
 				  <div class="col-md-6">
 					  <label for="address" class="control-label">Address:</label>					  
@@ -207,7 +227,7 @@
 				 <br>
 				 <fieldset>
 				  
-				  <div class="col-md-6">
+				  <div class="col-md-12">
 					<label for="concern" class="control-label">Concern To:</label>
 					  <input id="concern" type="text" class="form-control" name="concern" value="{{ old('concern') }}" required autofocus >
 					  
@@ -219,6 +239,26 @@
 				  </div>
 				  
 				  <div class="col-md-6">
+					  <label for="address" class="control-label">TIN No.:</label>					  
+					  <input id="tin" type="text" class="form-control" name="tin" value="{{ old('tin') }}" required autofocus >
+					  
+					  @if ($errors->has('tin'))
+					  <span class="help-block">
+						  <strong>{{ $errors->first('tin') }}</strong>
+					  </span>
+					  @endif
+				  </div>
+                                  <div class="col-md-6">
+					  <label for="address" class="control-label">CST.:</label>					  
+					  <input id="cst" type="text" class="form-control" name="cst" value="{{ old('cst') }}" required autofocus >
+					  
+					  @if ($errors->has('cst'))
+					  <span class="help-block">
+						  <strong>{{ $errors->first('cst') }}</strong>
+					  </span>
+					  @endif
+				  </div>
+                                  <div class="col-md-6">
 					  <label for="address" class="control-label">Address:</label>					  
 					  <input id="address" type="text" class="form-control" name="address" value="{{ old('address') }}" required autofocus >
 					  

@@ -13,7 +13,7 @@
          <tr>
             <td colspan="4">Regd. Office: 14A & 14B, Vasant Square Mall, </td>
             <td colspan="3"></td>
-            <td colspan="2"><stong>Received at</stong></td>
+            <td colspan="2"><stong>Consignor</stong></td>
             <td colspan="2"><stong>{{$center['centerName']}}</stong></td>
 
         </tr>
@@ -60,7 +60,7 @@
             @for($i=0;$i<4;$i++)
             {!!'<td></td>'!!}
             @endfor
-            <td>GRN No.</td>
+            <td>Dispatch Note no.-</td>
             <td colspan="2">{{$grnRef}}</td>
         </tr>
         <tr>
@@ -69,7 +69,7 @@
             @for($i=0;$i<4;$i++)
             {!!'<td></td>'!!}
             @endfor
-            <td># PO ref-</td>
+            <td># Requisition ref-</td>
             <td colspan="2"></td>
         </tr>
         <tr>
@@ -78,7 +78,7 @@
             @for($i=0;$i<4;$i++)
             {!!'<td></td>'!!}
             @endfor
-            <td># Bill of entry ref</td>
+            <td></td>
             <td colspan="2"></td>
         </tr>
          <tr>
@@ -92,51 +92,34 @@
             @endfor
         </tr>
         <tr>
-            <td colspan="2">Received from</td>
+            <td colspan="2">Ship To</td>
             <td colspan="3"></td>
             <td></td>
             <td></td>
-            <td colspan="2">Transport company</td>
-            <td colspan="2"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
-            <td colspan="2">Address  of vendor</td>
+            <td colspan="2">Address  of consignee</td>
             <td colspan="3"></td>
             <td></td>
             <td></td>
-            <td colspan="2">Truck no.</td>
-            <td colspan="2"></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
         <tr>
-            <td colspan="2">TIN of vendor</td>
+            <td colspan="2">TIN of consignee</td>
             <td colspan="3"></td>
             <td></td>
             <td></td>
-            <td colspan="2">Driver</td>
-            <td colspan="2"></td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td colspan="2">Invoice no./Delivery note no.</td>
-            <td colspan="2">{{$invoice}}</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td colspan="2">Packing list no.</td>
-            <td colspan="2"></td>
-        </tr>
+        
     </thead>
     
     <tr>
@@ -149,19 +132,22 @@
             <th>S.no.</th>
             <th colspan="2">Item Code</th>
             <th colspan="2">Item Name</th>
-            <th colspan="2">Quantity as per Packing list/Delivery note</th>
-            <th colspan="2">Missing quantity</th>
-            <th colspan="2">Quantity received</th>
-        </tr><?php $i = 1;$tot = 0?>
+            <th colspan="2">Quantity</th>
+            <th colspan="2">Per Unit Rate</th>
+            <th colspan="2">Value</th>
+        </tr><?php $i = 1;$tot = 0; $totVal = 0?>
         @foreach($data as $dat)
-        <?php $tot += $dat['quantity'];?>
+        <?php $tot += $dat['quantity'];
+        $val = $price[$dat['item']]*$dat['quantity'];
+        $totVal +=$val;
+        ?>
         <tr>
             <td>{{$i++}}</th>
             <td colspan="2">{{$dat['items']['code']}}</td>
             <td colspan="2">{{$dat['items']['item']}}</td>
             <td colspan="2">{{$dat['quantity']}}</td>
-            <td colspan="2"></td>
-            <td colspan="2"></td>
+            <td colspan="2">{{$price[$dat['item']]}}</td>
+            <td colspan="2">{{$val}}</td>
         </tr>
         @endforeach
         <tr style="height: 20px;border:1px solid black;">
@@ -170,7 +156,7 @@
             <th colspan="2">Total</th>
             <th colspan="2">{{$tot}}</th>
             <th colspan="2"></th>
-            <th colspan="2"></th>
+            <th colspan="2">{{$totVal}}</th>
         </tr>
         <tr>
         @for($i=0;$i<11;$i++)
@@ -182,21 +168,21 @@
             {!!'<td></td>'!!}
             @endfor
         </tr>
-        <tr style="height: 20px;border:1px solid black;">
-            <th></th>
-            <th colspan="2"></th>
-            <th colspan="2">No. of cartons</th>
-            <th colspan="2"></th>
-            <th colspan="2">Warehouse-in-charge</th>
-            <th colspan="2"></th>
+        <tr>
+            <td></td>
+            <td colspan="2"></td>
+            <td colspan="2">No. of cartons</td>
+            <td colspan="2"></td>
+            <td colspan="2">Warehouse-in-charge</td>
+            <td colspan="2"></td>
         </tr>
-        <tr style="height: 20px;border:1px solid black;">
-            <th></th>
-            <th colspan="2"></th>
-            <th colspan="2">Driver/Representative Signatur</th>
-            <th colspan="2"></th>
-            <th colspan="2">Name</th>
-            <th colspan="2"></th>
+        <tr>
+            <td></td>
+            <td colspan="2"></td>
+            <td colspan="2">Driver/Representative Signatur</td>
+            <td colspan="2"></td>
+            <td colspan="2">Name</td>
+            <td colspan="2"></td>
         </tr>
     </tbody>
 </table>
