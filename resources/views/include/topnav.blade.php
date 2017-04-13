@@ -7,10 +7,10 @@
         <li><a href="{{ route('inventory.wksLevel',['store'=>0]) }}">Stock @ Warehouses : Wks Level Wise</a></li>
         <li><a href="{{ route('inventory.wks',['store'=>0]) }}">Stock @ Warehouses : Wks Item Wise</a></li>
         <li><a href="{{ url('inventory/orders/0') }}">Purchase Orders</a></li>
-        <li><a href="{{ url('inventory/stockCenters') }}">Stock @ Centers</a></li>
+        <!--li><a href="{{ url('inventory/stockCenters') }}">Stock @ Centers</a></li>
         <!--li><a href="{{ url('inventory/create') }}">New Stock</a></li-->
-        <li><a href="{{ url('inventory/transfer') }}">Stock : Transfer @ Warehouses</a></li>
-        <li><a href="{{ url('inventory/render') }}">Stock : Render to Center</a></li>
+        <!--li><a href="{{ url('inventory/transfer') }}">Stock : Transfer @ Warehouses</a></li>
+        <li><a href="{{ url('inventory/render') }}">Stock : Render to Center</a></li-->
     </ul>
 </li>
 <li class="dropdown">
