@@ -84,6 +84,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('/inventory/create', 'InventoryController@create')->name('inventory.create');
     Route::get('/inventory/transfer', 'InventoryController@transfer')->name('inventory.transfer');
     Route::get('/inventory/render', 'InventoryController@render')->name('inventory.render');
+    Route::match(['get','post'],'/addItemList', 'OrganigerController@addItemList')->name('addItemList');
    
     Route::match(['get', 'post'],'/stock', 'WarehouseController@stock')->name('stock');
     Route::match(['get', 'post'],'/wksLevel', 'WarehouseController@wksLevel')->name('wksLevel');
@@ -93,6 +94,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get', 'post'],'/stockWarehouses', 'WarehouseController@stockWarehouses')->name('stockWarehouses');
     Route::match(['get', 'post'], '/create', 'WarehouseController@create')->name('create');
     Route::match(['get', 'post'],'/transfer/{cent}', 'WarehouseController@transfer')->name('transfer');
+    Route::match(['get', 'post'],'/consume/{cent}', 'WarehouseController@consume')->name('consume');
     Route::match(['get', 'post'],'/render/{cent}', 'WarehouseController@render')->name('render');
     Route::match(['get', 'post'], '/consignments', 'WarehouseController@consignments')->name('consignments');
     Route::match(['get', 'post'], '/addCharges', 'WarehouseController@addCharges')->name('addCharges');

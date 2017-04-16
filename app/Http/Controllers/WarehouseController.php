@@ -19,6 +19,7 @@ use App\Integration;
 use App\Render;
 use App\Transfer;
 use App\Warehouse;
+use App\User;
 use Illuminate\Pagination\LengthAwarePaginator;//Paginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
@@ -89,9 +90,11 @@ class WarehouseController extends Controller
       foreach($cat as $cats){
           $sCat = Category::where('parent',$cats['id'])->get()->toArray();
           foreach ($sCat as $level){
-            $iLevel[] = $cats['category']." wks ".$level["category"];
+            $iLevel[] = $cats['category']." WKS ".$level["category"];
+            //$iLevel[] = $cats['category']." REVISED WKS ".$level["category"];
           }
       }
+      
       //dd($iLevel);
         $author = Auth::id();
         $cond = ["warehouse"=>$author];
@@ -99,31 +102,45 @@ class WarehouseController extends Controller
         if (Input::has('search'))
         {
             $cnd = trim(Input::get('search'));
+            $lvs = explode(" ", $cnd);
+            $lvs[] = "";$lvs[] = "";
             //foreach ($iLevel as $k=>$lv){
-                 $data[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
-                $q->where('item','like', $cnd.'%');})->sum('count');
-                 $prc[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
-                $q->where('item','like', '%'.$cnd.'%');})->pluck('unit_price')->first();
+                 $data[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
+                 $prc[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();
                 
-                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd){
-                $q->where('item','like', '%'.$cnd.'%');});
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
                 $qt = $data1->sum('quantity');
                 $data_cnt[$cnd] = $qt;
+
+                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($cnd,$lvs){
+                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $qt2 = $data2->sum('quantity');
+                $data_tr[$cnd] = $qt2;
             //}
         }else{
             foreach ($iLevel as $lv){
-                 $data[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', $lv.'%');})->sum('count');
-                $prc[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();//->pluck('unit_price');
+              $lvs = explode(" ", $lv);
+              //dd($lvs);
+                 $data[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
+                $prc[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();//->pluck('unit_price');
                 
-                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');});
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
                 $qt = $data1->sum('quantity');
                 $data_cnt[$lv] = $qt;
+
+                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($lvs,$lv){
+                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $qt2 = $data2->sum('quantity');
+                $data_tr[$lv] = $qt2;
             }
           //->paginate(10);dd($data);
-            //dd($prc);
+            //dd($data_tr);
         }
         //$units = new Paginator($data, 1);
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -131,7 +148,7 @@ class WarehouseController extends Controller
         $perPage = 10;
         $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
         $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
-        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock",'unit_price'=>$prc,'countCenter'=>$data_cnt]);
+        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock",'unit_price'=>$prc,'countCenter'=>$data_cnt,'byTransfer'=>$data_tr]);
     }
     public function stockCenter($cent){
        $iLevel =  $this->level_get();
@@ -140,27 +157,39 @@ class WarehouseController extends Controller
       if (Input::has('search'))
         {
             $lv = trim(Input::get('search'));
-            $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');});
+            $lvs = explode(" ", $lv);
+            $lvs[]="";$lvs[]="";
+            $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
                 $qt = $data1->sum('quantity');
                 $data[$lv] = $qt;
                 
-                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();
+                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();
+
+            $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$cent])->with("Items")->whereHas('Items', function($q2) use ($lv,$lvs){
+                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $qt2 = $data2->sum('quantity');
+                $data_tr[$lv] = $qt2;
         }else{
       foreach ($iLevel as $lv){
-         
-                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');});
+          $lvs = explode(" ", $lv);
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
                 $qt = $data1->sum('quantity');
                 $data[$lv] = $qt;
                 
-                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();
+                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();
+
+                 $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$cent])->with("Items")->whereHas('Items', function($q2) use ($lv,$lvs){
+                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $qt2 = $data2->sum('quantity');
+                $data_tr[$lv] = $qt2;
       }
         }
         if($cent ==0){ $data =[];}
-        $it = Integration::where('warehouse',$author)->pluck("center");
+        $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
         $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
         $cnt1 = Center::pluck("centerName","id")->toArray();
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -169,7 +198,7 @@ class WarehouseController extends Controller
         $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
         $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
         $left =  $cent !=0 ? Center::where('id',$cent)->pluck("centerName")->toArray()[0] : "";
-        return view("warehouse.center",["left_title"=>$left,"centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableCenterStock","input"=>"centerSock",'unit_price'=>$prc]);
+        return view("warehouse.center",["left_title"=>$left,"centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableCenterStock","input"=>"centerSock",'unit_price'=>$prc,'byTransfer'=>$data_tr]);
     }
     public function stockCenterCiNci($cent){
        $author = Auth::id();
@@ -181,7 +210,7 @@ class WarehouseController extends Controller
                
                 $data = $data1;
         if($cent ==0){ $data =[];}
-        $it = Integration::where('warehouse',$author)->pluck("center");
+        $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
         $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
         $cnt1 = Center::pluck("centerName","id")->toArray();
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -199,6 +228,7 @@ class WarehouseController extends Controller
         return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableConsignment","input"=>"consignment"]);
     }
     public function transfer(Request $request,$cent){
+      
         extract(Input::All());
         $author = Auth::id();
         $rules = array(
@@ -229,8 +259,8 @@ class WarehouseController extends Controller
             redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
         }
         }
-        $it = Integration::where('warehouse',$author)->pluck("center");
-        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
+        $cnt = Center::whereNotIn('id',$it)->pluck("centerName","id")->toArray();
         $cnt1 = Center::pluck("centerName","id")->toArray();
         $w = Warehouse::pluck("centerName","id")->toArray();//ar
         $w[0] = "--Select--";
@@ -277,10 +307,10 @@ class WarehouseController extends Controller
             redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
         }
         }
-        $it = Integration::where('warehouse',$author)->pluck("center");
+        $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
         $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
         $cnt1 = Center::pluck("centerName","id")->toArray();
-        $data = Render::distinct()->where('warehouse',$author)->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+        $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
          $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $perPage = 10;
@@ -500,8 +530,9 @@ class WarehouseController extends Controller
       $cond = ["warehouse"=>$author];
       $cnd = [1 ];
       foreach ($iLevel as $lv){
-                $data1 = Consignment::where($cond)->where('orderNo',$order)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', $lv.'%');});
+        $lvs = explode(" ", $lv);
+                $data1 = Consignment::where($cond)->where('orderNo',$order)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
+                $q->where('item','like', "%".$lvs[0].'%')->where('item','like', "%".$lvs[1].'%')->where('item','like', "%".$lvs[2].'%');});
                 $qt = $data1->sum('quantity');
                 $total = $data1->sum("total");
                 $tot_amt = $total+$pp[$lv]['amt'];
@@ -521,9 +552,11 @@ class WarehouseController extends Controller
       foreach($cat as $cats){
           $sCat = Category::where('parent',$cats['id'])->get()->toArray();
           foreach ($sCat as $level){
-            $iLevel[] = $cats['category']." wks ".$level["category"];
+            $iLevel[] = $cats['category']." WKS ".$level["category"];
+            
           }
       }
+      
       return $iLevel;
     }
     
@@ -533,8 +566,9 @@ class WarehouseController extends Controller
       $cond = ["warehouse"=>$author];
       $cnd = [1 ];
       foreach ($iLevel as $lv){
-                 $count = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', $lv.'%');})->sum('count');
+        $lvs = explode(" ", $lv);
+                 $count = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
+                $q->where('item','like', "%".$lvs[0].'%')->where('item','like', "%".$lvs[1].'%')->where('item','like', "%".$lvs[2].'%');})->sum('count');
                  $up = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
                 $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();
                // if($count !=0 && $up != 0 ):
@@ -663,7 +697,8 @@ class WarehouseController extends Controller
                         "warehouse"=>Auth::id(),
                         "created_at"=> date("Y-m-d"),
                         "updated_at"=> $this->time,
-                        'filename'=>$this->fileName
+                        'filename'=>$this->fileName,
+                        'warehouseTo'=>$this->wLoginByCenter($center)
                     ];
                 }
               //  $item[$item_code] = $rows;
@@ -693,7 +728,8 @@ class WarehouseController extends Controller
                         "warehouse"=>Auth::id(),
                         "created_at"=> date("Y-m-d"),
                         "updated_at"=> $this->time,
-                        'filename'=>$this->fileName
+                        'filename'=>$this->fileName,
+                        'warehouseTo'=>$this->wLoginByCenter($center)
                     ];
                 }
             }//dd($item);
@@ -718,10 +754,95 @@ class WarehouseController extends Controller
                         "warehouse"=>Auth::id(),
                         "created_at"=> date("Y-m-d"),
                         "updated_at"=> $this->time,
-                        'filename'=>$this->fileName
+                        'filename'=>$this->fileName,
+                        'warehouseTo'=>$this->wLoginByCenter($center)
                     ];
                 }
             }//dd($item);
          Transfer::insert($item);
+    }
+
+    public function wLoginByCenter($c){
+      $id = Integration::where('center',$c)->pluck('warehouse')->toArray();
+      $id = $id[0];
+      $login = User::where('frenchise',$id)->pluck('id')->toArray();
+      $login = $login[0];
+      return $login;
+      
+    }
+
+    public function consume(Request $request,$cent){
+        extract(Input::All());
+        $author = Auth::id();
+        $rules = array(
+            'file' => 'required',
+            'start' => 'required',
+            'sheet' => 'required',
+        );
+     //   dd($request);
+        if($request->isMethod('post')){
+            $validator = Validator::make(Input::all(), $rules);
+             // process the form
+            if ($validator->fails()) 
+            {  echo "fai";
+                return redirect()->back()->withErrors($validator);
+            }
+        
+        if ($request->hasFile('file')) {
+            $data = $this->upload($request);
+         if($data == "error"){
+            return redirect()->back()->with(["message"=>'Record Already Exists.']);
+         }
+         if(!empty($data)){
+             $this->ConsumeByCenter($data, $center,$type);
+         }
+        }else{
+            redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
+        }
+        }
+        $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
+        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        $cnt1 = Center::pluck("centerName","id")->toArray();
+        $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>2])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+         $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $perPage = 10;
+        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        //dd($units);
+        return view("warehouse.center",["left_title"=>"warehouse","centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableRender","input"=>"consume"]);
+    }
+
+    public function ConsumeByCenter(array $data, $center,$type){
+        $this->time = time();
+       // dd($data);
+       // foreach($data as $row){
+            
+            foreach ($data as $key=>$rows){
+              //dd($rows);
+                if($rows['ws'] > 0):
+                 $item_key = $type." ".$rows['level']." 001";
+                $item_code = Item::where("item","like","%".$item_key."%")->pluck("id")->toArray();
+                if(($item_code) && $rows > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$rows['ws']*(-1),
+                        "target"=>$center,
+                        "targetType"=>2,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> date("Y-m-d"),
+                        "updated_at"=> $this->time,
+                        'filename'=>$this->fileName
+                    ];
+                }
+              //  $item[$item_code] = $rows;
+                endif;
+            }
+       // }
+          //  dd($item);
+        Render::insert($item);
+        //echo $this->fileName;die;
+       //dd($item);
     }
 }

@@ -9,7 +9,7 @@ class Transfer extends Model
      use Notifiable;
      
      protected $fillable = [
-        'item','quantity','target','targetType' ,'warehouse','created_at','updated_at','filename'
+        'item','quantity','target','targetType' ,'warehouse','created_at','updated_at','filename','warehouseTo'
     ];
 
     /**

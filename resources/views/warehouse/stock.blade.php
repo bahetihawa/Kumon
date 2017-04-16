@@ -7,6 +7,9 @@
     @if(isset($input) && $input =="render")
         New Record
     @endif
+     @if(isset($input) && $input =="consume")
+        New Consumption Record
+    @endif
 @endsection
 @section('content')
     <div class="panel panel-default col-md-3 left-nav">
@@ -21,6 +24,7 @@
                 <li class="list-group-item"><a href="{{ url('consignments') }}">Purchase Orders</a></li>
                 <li class="list-group-item"><a href="{{ url('transfer/0') }}">Stock : Transfer @ Warehouses</a></li>
                 <li class="list-group-item"><a href="{{ url('render/0') }}">Stock : Issue to Center</a></li>
+                 <li class="list-group-item"><a href="{{ url('consume/0') }}">Stock : Consumed By Center</a></li>
             </ul>
         </div>
     </div>

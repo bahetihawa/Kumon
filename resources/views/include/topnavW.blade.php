@@ -11,6 +11,7 @@
         <li><a href="{{ url('consignments') }}">Purchase Orders</a></li>
         <li><a href="{{ url('transfer/0') }}">Stock : Transfer @ Warehouses</a></li>
         <li><a href="{{ url('render/0') }}">Stock : Issue to Center</a></li>
+        <li><a href="{{ url('consume/0') }}">Stock : Consumed By Center</a></li>
     </ul>
 </li>
 

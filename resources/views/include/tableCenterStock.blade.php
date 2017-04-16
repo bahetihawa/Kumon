@@ -17,9 +17,9 @@
                             <td class="text-info"><a href="#">{{ $i }}</a></td>
                             <td>{{$k}}</td>                         
                             <td class="text-warning">{{$unit_price[$k]}}</d>
-                            <td class="text-center">{{$v}}</td>                         
+                            <td class="text-center">{{$v + $byTransfer[$k]}}</td>                         
                              
-                           <td class="text-danger">{{$v*$unit_price[$k]}}</d>
+                           <td class="text-danger">{{($v + $byTransfer[$k])*$unit_price[$k]}}</d>
                            
                         </tr>
                         @endforeach

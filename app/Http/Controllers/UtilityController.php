@@ -161,9 +161,7 @@ class UtilityController extends Controller
     }
     public function getCent(){
         $id = Input::get('id');
-        $it = User::join('warehouses', 'warehouses.id', '=', 'users.frenchise')->where('warehouses.id',$id)->pluck('users.id')->toArray();
-
-        $cnt = Center::join('integrations','integrations.center','=','centers.id')->whereIn('integrations.warehouse',$it)->pluck("centerName","centers.id")->toArray();
+        $cnt = Center::join('integrations','integrations.center','=','centers.id')->where('integrations.warehouse',$id)->pluck("centerName","centers.id")->toArray();
 //print_r($it);die;
         return view("warehouse.option",['data'=>$cnt]);
     }
