@@ -3,11 +3,6 @@
 <head>
     @include('include.head')
 </head>
-<style>
-.footer{
-    bottom: 0;
-}
-</style>
 <body>
     <div id="app">
         <nav class="navbar navbar-inverse navbar-static-top">

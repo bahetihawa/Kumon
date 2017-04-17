@@ -22,7 +22,7 @@
         @if(!empty($center))
         @foreach($center as $ct)
         <tr>
-            <td>{{ $ct["center"]["centerName"] }}</td>
+            <td>{{ $ct["center"]["centerName"] }} - {{ $ct["center"]["province"] }}</td>
             <td class="text-right"><a  href="{{ route('users.create',['id'=>$ct['id'] ])}}"> Remove from {{ $whName }}</a></td>
         </tr>
         @endforeach
@@ -44,8 +44,8 @@
         @if(!empty($cts->toArray()) )
         @foreach($cts as $ctss)
         <tr>
-            <td>{{ $ctss->centerName }}</td>
-            <td class="text-right">@if($store != "")<a href="{{ route('users.create',['warehouse'=>$store,'center'=>$ctss->id])}}"> Add to {{ $whName }}</a>@endif</td>
+            <td>{{ $ctss->centerName }}-{{$ctss->province}}</td>
+            <td class="text-right">@if($store != "")<a href="{{ route('users.create',['warehouse'=>$store,'center'=>$ctss->id])}}"> Add to {{ str_replace('"','',$whName) }}</a>@endif</td>
         </tr>
         @endforeach
         @else

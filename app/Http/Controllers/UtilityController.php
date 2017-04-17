@@ -195,4 +195,162 @@ class UtilityController extends Controller
 
         })->export('xlsx');
     }
+
+    public function stockStatus()
+    {
+       $data = $this->opening(Auth::id());
+       extract($data);
+        Excel::create('OpeningStock_'.date("m-Y"), function($excel) use ($wdata,$cent,$headings,$were) {
+
+            // Set the title
+            $excel->setTitle('OpeningStock_'.date("m-Y"));
+            // Chain the setters
+            $excel->setCreator('Roster')
+                  ->setCompany('Kumon');
+            // Call them separately
+            $excel->setDescription('date("m-Y")');
+            
+            $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were){
+
+                $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were]);
+
+            });
+
+        })->export('xlsx');
+
+        
+    }
+
+
+    public function level_get(){
+         $wks = Category::where('category',"wks")->pluck('id');
+       $parent = $wks[0];
+       $cat = Category::where('parent',$parent)->get()->toArray();
+      foreach($cat as $cats){
+          $sCat = Category::where('parent',$cats['id'])->get()->toArray();
+          foreach ($sCat as $level){
+            $iLevel[] = $cats['category']." WKS ".$level["category"];
+            
+          }
+      }
+      
+      return $iLevel;
+    }
+
+    public function opening($auth){
+        $author = $auth;
+        $wh = User::find($auth)->frenchise;
+        $were = Warehouse::find($wh)->centerCode;//dd($were);
+        $cent = Center::with('integration')->whereHas("integration",function($x) use($wh){
+            $x->where('warehouse',$wh);
+        })->pluck('concern','id')->toArray();
+         $cent1 = Center::with('integration')->whereHas("integration",function($x) use($wh){
+            $x->where('warehouse',$wh);
+        })->pluck('concern','centerName')->toArray();
+        //dd($cent);
+        $head = ["sr"=>'Sr.',"Item_Code"=>"Item Code","Item_Name"=>'Item_Name','wh'=>"Qyt at Wh. ".$were];
+        $heading = array_merge($head,$cent1);
+        $tot = ["Total_Centers"=>"Total qty in ".$were." centres","Total_Wh"=>"Total qty in ".$were];
+        $headings = array_merge($heading,$tot);
+        $whData = Stoks::where(["warehouse"=>$author,'category'=>1])->with("items")->get()->toArray();
+        foreach ($whData as $key => $value) {
+            $k = $value['items']['item'];
+            $wdata[$k] = ['code'=>$value['items']['code'],'item'=>$value['items']['item'],"qt"=>$value['count']];
+            foreach ($cent as $key1 => $value1) {
+                 $wdata[$k][$value1] = "";
+            }
+            $wdata[$k]['tot_cent'] = 0;
+            $wdata[$k]['tot_wh'] = $value['count'];
+        }
+        //dd($wdata);
+        $iLevel = $this->level_get();
+        foreach ($iLevel as $key => $lv) {
+            $lvs = explode(" ", $lv);
+            $data = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
+
+           $wdata[$lv."000"] = ['code'=>$lv."000",'item'=>$lv,"qt"=>$data];
+           $totCent = 0;
+           foreach ($cent as $key1 => $value1) {
+
+                $data1 = Render::where(["warehouse"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $qt = $data1->sum('quantity');
+                //$data = $qt;
+
+                $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q2) use ($lv,$lvs){
+                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $qt2 = $data2->sum('quantity');
+               // $data_tr = $qt2;
+                $qtx = $qt+$qt2;
+                 $wdata[$lv."000"][$value1] = $qtx;
+                 $totCent +=$qtx;
+            }
+            $wdata[$lv."000"]['tot_cent'] = $totCent;
+            $wdata[$lv."000"]['tot_wh'] = $totCent+$data;
+        }//dd($wdata);
+
+        $whData1 = Stoks::where("warehouse",$author)->where('category','!=',1)->with("items")->get()->toArray();
+        foreach ($whData1 as $key => $value) {
+            $k = $value['items']['item'];
+            $wdata1[$k] = ['code'=>$value['items']['code'],'item'=>$value['items']['item'],"qt"=>$value['count']];
+            foreach ($cent as $key1 => $value1) {
+                 $wdata1[$k][$value1] = "";
+            }
+            $wdata1[$k]['tot_cent'] = 0;
+            $wdata1[$k]['tot_wh'] = $value['count'];
+        }
+        
+        ksort($wdata);//dd($wdata1);
+        $da = array_merge($wdata1,$wdata);
+        $wdata = $da;
+        $sumWh = Stoks::where("warehouse",$author)->sum('count');//dd($sumWh);
+        $sumR = Render::where("warehouse",$author)->with("Items")->whereHas('Items', function($q2){
+                $q2->where('category',1);})->sum('quantity');
+        $sumT = Transfer::where("warehouseTo",$author)->with("Items")->whereHas('Items', function($q21) {
+                $q21->where('category',1);})->sum('quantity');
+        $sumC = $sumR+$sumT;//dd($sumC);
+       // foreach ($whData as $key => $value) {
+            $k = "Total";
+            $wdata[$k] = ['code'=>"",'item'=>"Total","qt"=>$sumWh];
+            foreach ($cent as $key1 => $value1) {
+                 $wdata[$k][$value1] = "";
+            }
+            $wdata[$k]['tot_cent'] = $sumC;
+            $wdata[$k]['tot_wh'] = $sumWh+$sumC;
+            return ['wdata'=>$wdata,'cent'=>$cent,'headings'=>$headings,'were'=>$were];
+    }
+
+    public function stockStatusAll()
+    {
+        $wh = User::where('role',3)->pluck('id')->toArray();//dd($wh);
+       foreach ($wh as $key => $value) {
+           $data[$value] = $this->opening($value);
+       }
+       
+      // dd($data);
+        Excel::create('OpeningStock_'.date("m-Y"), function($excel) use ($data) {
+
+            // Set the title
+            $excel->setTitle('OpeningStock_'.date("m-Y"));
+            // Chain the setters
+            $excel->setCreator('Roster')
+                  ->setCompany('Kumon');
+            // Call them separately
+            $excel->setDescription('date("m-Y")');
+            foreach ($data as $k => $v) {
+                extract($v);
+            
+                $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were){
+
+                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were]);
+
+                });
+            }
+
+        })->export('xlsx');
+
+        
+    }
+
 }

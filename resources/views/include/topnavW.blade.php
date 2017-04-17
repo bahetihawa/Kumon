@@ -14,6 +14,10 @@
         <li><a href="{{ url('consume/0') }}">Stock : Consumed By Center</a></li>
     </ul>
 </li>
+<li class="">
+    <a class=""  href="{{ url('stockStatus') }}">Download Stock Status
+    </a>
+</li>
 
 
 <!--li class="dropdown">

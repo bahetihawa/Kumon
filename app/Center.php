@@ -32,6 +32,6 @@ class Center extends Model
         return $this->belongsTo("App\Country","country");
     }
     public function integration(){
-        return $this->hasMany("integration");
+        return $this->hasOne("App\Integration",'center');
     }
 }

@@ -7,6 +7,7 @@
 						@foreach($center as $centers)
                         <li href='{{$centers->centerName}}' data="{{$centers->id}}" class="list-group-item"><b>{{$centers->centerName}}</b><i class="pull-right">@if(isset($centers->district->district)) {{$centers->district->district}} @endif</i></li>
                         @endforeach
+                        <?php echo $center->render();?><br>
 @endsection
 @section('rightbar')
     <form class="form-horizontal" role="form" method="POST" action="{{ route('setup.addForm') }}" id="frm">

@@ -45,3 +45,9 @@
         <!--li><a href="{{ url('/users/logs') }}">Logs</a></li-->
     </ul>
 </li>
+<li class="dropdown">
+    <a class=""  href="{{ url('stockStatusAll') }}">Download Stock Status
+     
+    </a>
+    
+</li>

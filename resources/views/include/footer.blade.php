@@ -1,6 +1,6 @@
-<div class="navbar-inverse" style="
+<div class="navbar-inverse footer" style="
      position: absolute;
-    bottom: 0;
+    
     width: 100%;">
     <div class="container-fluid">
         <i>Design & Maintained By : <a href="http://itcombine.com">ITCombine</a></i>
