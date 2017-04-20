@@ -25,6 +25,7 @@ class UtilityController extends Controller
  
     public function __construct()
     {
+         ini_set('max_execution_time', 300);
         $this->middleware('auth');
         /*$this->middleware(function($request,$next){
             if(Auth::user() && Auth::user()->role !=1){
@@ -351,6 +352,120 @@ class UtilityController extends Controller
         })->export('xlsx');
 
         
+    }
+
+    public function uploadStacks(Request $request){
+        ini_set('max_execution_time', 300);
+
+       
+        if ($request->isMethod('post'))
+        {
+            extract(Input::All());
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $destinationPath = 'uploads';
+             unlink($destinationPath."/".$fileName);
+            if(file_exists($destinationPath."/".$fileName)){
+                $err = "error";
+                return $err;
+            }else{
+                $file->move($destinationPath,$fileName);
+                 $this->fileName = $destinationPath."/".$fileName;
+                //config(['excel.import.startRow' => 1]);
+                $data = Excel::selectSheetsByIndex(0)->load($destinationPath."/".$fileName, function($reader) {
+                      // $reader->noHeading();
+                  /* foreach ($reader->toArray() as $row) {
+                                             $bb[] = $row;
+                                             $dd($row);
+                        }
+                    echo '<pre>';print_r($bb );echo '</pre>';  die();*/
+                })->toArray();
+             //  dd($data);
+                foreach ($data as $key => $value) {
+                  $dat = Item::where('items.code',$value['code'])->pluck('id')->toArray();
+                  foreach ($value as $key1 => $value1) {
+                      Stoks::where(["warehouse"=>$key1])->whereIn('specify',$dat)->update(["unit_price"=>$value['wac'],'count'=>$value1]);
+                  }
+                }
+               // dd($dat);
+             //return $data;
+            }
+        }
+        return view('uploadStack');
+        
+
+    }
+
+    public function stockCenter(Request $request){
+        ini_set('max_execution_time', 300);
+
+       
+        if ($request->isMethod('post'))
+        {
+            extract(Input::All());
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $destinationPath = 'uploads';
+             unlink($destinationPath."/".$fileName);
+            if(file_exists($destinationPath."/".$fileName)){
+                $err = "error";
+                return $err;
+            }else{
+                $file->move($destinationPath,$fileName);
+                 $this->fileName = $destinationPath."/".$fileName;
+                //config(['excel.import.startRow' => 1]);
+                $data = Excel::selectSheetsByIndex(0)->load($destinationPath."/".$fileName, function($reader) {
+                      // $reader->noHeading();
+                  /* foreach ($reader->toArray() as $row) {
+                                             $bb[] = $row;
+                                             $dd($row);
+                        }
+                    echo '<pre>';print_r($bb );echo '</pre>';  die();*/
+                })->toArray();
+               $time = time();
+               $date = date("Y-m-d");
+                foreach ($data as $key => $value) {
+                  $dat = Item::where('items.code',$value['code'])->pluck('id')->toArray();
+                  foreach ($value as $key1 => $value1) {
+    
+                      $cent1 = Center::where("concern",'like','%'.$key1.'%')->pluck("id")->toArray();
+                      if(!empty($cent1)){
+                        $it = Integration::where('center',$cent1[0])->pluck('warehouse')->toArray();
+                         $ware = User::where('frenchise',$it[0])->pluck('id')->toArray()[0];
+
+                         $insert[] = [
+                                        'item'=>$dat[0],
+                                        'quantity'=>(int)$value1,
+                                        'target'=>$cent1[0],
+                                        'targetType'=>1,
+                                        'warehouse'=>$ware,
+                                        'created_at'=>$date,
+                                        'updated_at'=>$time,
+                                        'filename'=>""
+                                    ];
+                      }
+                    
+                  } //dd($ware);
+            }
+        }  
+      }
+         Render::insert($insert);              
+        //dd($insert);
+        return view('uploadStack');
+    }
+
+    public function downloadRender($file){
+        $filename1 = Render::where("updated_at",$file)->pluck("filename")->first();
+        $filename = "uploads/".$filename1;
+        if(!file_exists($filename)){
+            return back()->with(["message"=>"Record Id: ".$file." : Requested file moved or deleted"]);
+        }
+        header("Cache-Control: public");
+        header("Content-Description: File Transfer");
+        header("Content-Disposition: attachment; filename= ".$filename1);
+        header("Content-Transfer-Encoding: binary");    
+        readfile($filename);
+        return back();
     }
 
 }
