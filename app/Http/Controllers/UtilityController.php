@@ -364,7 +364,7 @@ class UtilityController extends Controller
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
             $destinationPath = 'uploads';
-             unlink($destinationPath."/".$fileName);
+             @unlink($destinationPath."/".$fileName);
             if(file_exists($destinationPath."/".$fileName)){
                 $err = "error";
                 return $err;
@@ -373,12 +373,7 @@ class UtilityController extends Controller
                  $this->fileName = $destinationPath."/".$fileName;
                 //config(['excel.import.startRow' => 1]);
                 $data = Excel::selectSheetsByIndex(0)->load($destinationPath."/".$fileName, function($reader) {
-                      // $reader->noHeading();
-                  /* foreach ($reader->toArray() as $row) {
-                                             $bb[] = $row;
-                                             $dd($row);
-                        }
-                    echo '<pre>';print_r($bb );echo '</pre>';  die();*/
+                      
                 })->toArray();
              //  dd($data);
                 foreach ($data as $key => $value) {

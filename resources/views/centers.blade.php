@@ -76,7 +76,18 @@
 					  @endif
 				  </div>
                                   <div class="col-md-6">
-					<label for="concern" class="control-label">TIN No.:</label>
+					<label for="concern" class="control-label">
+					@if (Route::currentRouteName()=='center') 
+
+					Center Type (COC/FC)
+
+					@else
+
+					TIN No.:
+					@endif
+
+
+					</label>
 					  <input id="tin" type="text" class="form-control" name="tin" value="{{ old('tin') }}" required autofocus >
 					  
 					  @if ($errors->has('tin'))
@@ -86,7 +97,19 @@
 					  @endif
 				  </div>
                                   <div class="col-md-6">
-					<label for="concern" class="control-label">CST:</label>
+					<label for="concern" class="control-label">
+
+					@if (Route::currentRouteName()=='center') 
+
+					Contact Person
+
+					@else
+
+					CST:
+					@endif
+
+
+					</label>
 					  <input id="cst" type="text" class="form-control" name="cst" value="{{ old('cst') }}" required autofocus >
 					  
 					  @if ($errors->has('cst'))
@@ -240,7 +263,16 @@
 				  </div>
 				  
 				  <div class="col-md-6">
-					  <label for="address" class="control-label">TIN No.:</label>					  
+					  <label for="address" class="control-label">
+					  @if (Route::currentRouteName()=='center') 
+
+					Center Type (COC/FC)
+
+					@else
+
+					TIN No.:
+					@endif
+					</label>					  
 					  <input id="tin" type="text" class="form-control" name="tin" value="{{ old('tin') }}" required autofocus >
 					  
 					  @if ($errors->has('tin'))
@@ -250,7 +282,16 @@
 					  @endif
 				  </div>
                                   <div class="col-md-6">
-					  <label for="address" class="control-label">CST.:</label>					  
+					  <label for="address" class="control-label">
+					   @if (Route::currentRouteName()=='center') 
+
+					Contcat Person
+
+					@else
+
+					CST:
+					@endif
+					  </label>					  
 					  <input id="cst" type="text" class="form-control" name="cst" value="{{ old('cst') }}" required autofocus >
 					  
 					  @if ($errors->has('cst'))

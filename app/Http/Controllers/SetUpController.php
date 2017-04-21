@@ -119,11 +119,11 @@ class SetupController extends Controller
     }
     
     public function Warehouse()
-    { 	$center = Warehouse::with("District")->get();
+    { 	$center = Warehouse::with("District")->paginate(10);
         $country = Country::all();
         $province = Province::all();
         $dist = District::all();
-        return view('centers',["center"=>  json_decode($center),"country"=>$country,"province"=>$province,"district"=>$dist,"left_title"=>"Warehouses"]);
+        return view('centers',["center"=>  $center,"country"=>$country,"province"=>$province,"district"=>$dist,"left_title"=>"Warehouses"]);
     }
 	
 	public function getCenter(Request $request)

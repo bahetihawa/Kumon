@@ -109,6 +109,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get','post'],'/stockStatus', "UtilityController@stockStatus")->name("stockStatus");
     Route::match(['get','post'],'/stockStatusAll', "UtilityController@stockStatusAll")->name("stockStatusAll");
 
-    //Route::match(['get','post'],'/uploadStacks', "UtilityController@uploadStacks")->name("uploadStacks");
+    Route::match(['get','post'],'/uploadStacks', "UtilityController@uploadStacks")->name("uploadStacks");
      //Route::match(['get','post'],'/stockCenter', "UtilityController@stockCenter")->name("stockCenter");
 });
