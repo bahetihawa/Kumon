@@ -201,7 +201,7 @@ class UtilityController extends Controller
     {
        $data = $this->opening(Auth::id());
        extract($data);
-        Excel::create('OpeningStock_'.date("m-Y"), function($excel) use ($wdata,$cent,$headings,$were) {
+        Excel::create('OpeningStock_'.date("m-Y"), function($excel) use ($wdata,$cent,$headings,$were,$css) {
 
             // Set the title
             $excel->setTitle('OpeningStock_'.date("m-Y"));
@@ -211,9 +211,10 @@ class UtilityController extends Controller
             // Call them separately
             $excel->setDescription('date("m-Y")');
             
-            $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were){
-
-                $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were]);
+            $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were,$css){
+                $sheet->setFreeze('D8');
+               // $sheet->setAutoSize(false);
+                $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css]);
 
             });
 
@@ -239,7 +240,7 @@ class UtilityController extends Controller
     }
 
     public function opening($auth){
-        $author = $auth;
+        $author = $auth;$totVal = 0;$css = [];
         $wh = User::find($auth)->frenchise;
         $were = Warehouse::find($wh)->centerCode;//dd($were);
         $cent = Center::with('integration')->whereHas("integration",function($x) use($wh){
@@ -247,11 +248,11 @@ class UtilityController extends Controller
         })->pluck('concern','id')->toArray();
          $cent1 = Center::with('integration')->whereHas("integration",function($x) use($wh){
             $x->where('warehouse',$wh);
-        })->pluck('concern','centerName')->toArray();
+        })->pluck('centerName','concern')->toArray();
         //dd($cent);
-        $head = ["sr"=>'Sr.',"Item_Code"=>"Item Code","Item_Name"=>'Item_Name','wh'=>"Qyt at Wh. ".$were];
+        $head = ["Sr"=>'',"Item Code"=>"","Item Name"=>'',"Qyt at Wh. ".$were=>''];
         $heading = array_merge($head,$cent1);
-        $tot = ["Total_Centers"=>"Total qty in ".$were." centres","Total_Wh"=>"Total qty in ".$were];
+        $tot = ["Total qty in ".$were." centres"=>"","Total qty in ".$were=>'','Weighted Avarege Cost'=>"WAC",'Value in Centers'=>'','Total Stok Value'=>''];
         $headings = array_merge($heading,$tot);
         $whData = Stoks::where(["warehouse"=>$author,'category'=>1])->with("items")->get()->toArray();
         foreach ($whData as $key => $value) {
@@ -262,6 +263,9 @@ class UtilityController extends Controller
             }
             $wdata[$k]['tot_cent'] = 0;
             $wdata[$k]['tot_wh'] = $value['count'];
+            $wdata[$k]['wac'] = $value['unit_price'];
+            $wdata[$k]['val_cent'] = 0;
+            $wdata[$k]['stack_val'] = $value['count']*$value['unit_price'];
         }
         //dd($wdata);
         $iLevel = $this->level_get();
@@ -271,6 +275,8 @@ class UtilityController extends Controller
                 $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
 
            $wdata[$lv."000"] = ['code'=>$lv."000",'item'=>$lv,"qt"=>$data];
+           $prc = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
+                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->first()->unit_price;
            $totCent = 0;
            foreach ($cent as $key1 => $value1) {
 
@@ -286,9 +292,14 @@ class UtilityController extends Controller
                 $qtx = $qt+$qt2;
                  $wdata[$lv."000"][$value1] = $qtx;
                  $totCent +=$qtx;
+                 $totVal +=$qtx*$prc;
             }
             $wdata[$lv."000"]['tot_cent'] = $totCent;
             $wdata[$lv."000"]['tot_wh'] = $totCent+$data;
+            $wdata[$lv."000"]['wac'] = $prc;
+            $wdata[$lv."000"]['val_cent'] = $prc*$totCent;
+            $wdata[$lv."000"]['stack_val'] = ($totCent+$data)*$prc;
+            $css[] = $lv."000";
         }//dd($wdata);
 
         $whData1 = Stoks::where("warehouse",$author)->where('category','!=',1)->with("items")->get()->toArray();
@@ -300,12 +311,17 @@ class UtilityController extends Controller
             }
             $wdata1[$k]['tot_cent'] = 0;
             $wdata1[$k]['tot_wh'] = $value['count'];
+            $wdata1[$k]['wac'] = $value['unit_price'];
+            $wdata1[$k]['val_cent'] = 0;
+            $wdata1[$k]['stack_val'] = $value['count']*$value['unit_price'];
+            $css[] = $k;
         }
         
         ksort($wdata);//dd($wdata1);
         $da = array_merge($wdata1,$wdata);
         $wdata = $da;
         $sumWh = Stoks::where("warehouse",$author)->sum('count');//dd($sumWh);
+         $sumWhPrc = Stoks::where("warehouse",$author)->selectRaw('SUM(count * unit_price) as total')->pluck('total')->toArray()[0];
         $sumR = Render::where("warehouse",$author)->with("Items")->whereHas('Items', function($q2){
                 $q2->where('category',1);})->sum('quantity');
         $sumT = Transfer::where("warehouseTo",$author)->with("Items")->whereHas('Items', function($q21) {
@@ -319,7 +335,11 @@ class UtilityController extends Controller
             }
             $wdata[$k]['tot_cent'] = $sumC;
             $wdata[$k]['tot_wh'] = $sumWh+$sumC;
-            return ['wdata'=>$wdata,'cent'=>$cent,'headings'=>$headings,'were'=>$were];
+            $wdata[$k]['wac'] = "";
+            $wdata[$k]['val_cent'] = $totVal;
+            $wdata[$k]['stack_val'] = $sumWhPrc+$totVal;
+            $css[] = $k;
+            return ['wdata'=>$wdata,'cent'=>$cent,'headings'=>$headings,'were'=>$were,'css'=>$css];
     }
 
     public function stockStatusAll()
@@ -333,7 +353,7 @@ class UtilityController extends Controller
         Excel::create('OpeningStock_'.date("m-Y"), function($excel) use ($data) {
 
             // Set the title
-            $excel->setTitle('OpeningStock_'.date("m-Y"));
+            $excel->setTitle('OpeningStockAllWareHouse_'.date("m-Y"));
             // Chain the setters
             $excel->setCreator('Roster')
                   ->setCompany('Kumon');
@@ -342,9 +362,9 @@ class UtilityController extends Controller
             foreach ($data as $k => $v) {
                 extract($v);
             
-                $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were){
-
-                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were]);
+                $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were,$css){
+                    $sheet->setFreeze('D8');
+                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css]);
 
                 });
             }
