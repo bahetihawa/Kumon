@@ -40,6 +40,7 @@ class WarehouseController extends Controller
 {
     public function __construct()
     { 
+         ini_set('max_execution_time', 300);
        // $this->middleware('auth');
         $this->middleware(function($request,$next){
             if(Auth::user() && Auth::user()->role !=3){
@@ -231,6 +232,7 @@ class WarehouseController extends Controller
     public function transfer(Request $request,$cent){
       
         extract(Input::All());
+        //$this->date = $date;
         $author = Auth::id();
         $rules = array(
             'file' => 'required',
@@ -247,6 +249,7 @@ class WarehouseController extends Controller
             }
         
         if ($request->hasFile('file')) {
+             $this->date = $date;
             $data = $this->upload($request);
          if($data == "error"){
             return redirect()->back()->with(["message"=>'Record Already Exists.']);
@@ -279,6 +282,7 @@ class WarehouseController extends Controller
     }
     public function render(Request $request,$cent){
         extract(Input::All());
+        
         $author = Auth::id();
         $rules = array(
             'file' => 'required',
@@ -295,6 +299,7 @@ class WarehouseController extends Controller
             }
         
         if ($request->hasFile('file')) {
+             $this->date = $date;
             $data = $this->upload($request);
          if($data == "error"){
             return redirect()->back()->with(["message"=>'Record Already Exists.']);
@@ -377,7 +382,7 @@ class WarehouseController extends Controller
                         'ammount_myr'=>$value["amount_myr"],
                         'exchange_rate'=>$value["exchange_rate"],
                         'ammount_inr'=>$value["amount_in_inr"],
-                        "created_at"=>date("Y-m-d H:i:s"),
+                        "created_at"=>$date,
                         ];
                    endif;
 		}
@@ -401,6 +406,7 @@ class WarehouseController extends Controller
                             "custom"=>$custom,
                             "amount"=>$sum,
                             "sum"=>$freight+$sum+$cnf+$custom+$other,
+                            "created_at"=>$date,
                         ]); 
                         
                     endif;
@@ -586,9 +592,15 @@ class WarehouseController extends Controller
             $index = $row["subject"];
             if(isset($sub[$index])):
              $item_group =  @$sub[$index]." WKS ".$row["level"];
+                if($row["level"] == 'Z1' || $row["level"] == 'Z2'){
+                    $item_group =  "PSE WKS ".$row["level"];
+                }
+                if($row["level"] =='ZII'){
+                     $item_group =  "PSE WKS Z2";
+                }
             endif;
             foreach ($row as $key=>$rows){
-                if(is_numeric($key)):
+                 if(is_numeric($key) && $rows > 0 && $row["level"] !="LEVEL" && $row["level"] !=null):
                  $item_key = $item_group." ".$this->zeroPadding($key);
                 $item_code = Item::where("item","like","%".$item_key."%")->pluck("id")->toArray();
                 if(($item_code) && $rows > 0){
@@ -599,7 +611,7 @@ class WarehouseController extends Controller
                         "target"=>$center,
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
-                        "created_at"=> date("Y-m-d"),
+                        "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName
                     ];
@@ -629,7 +641,7 @@ class WarehouseController extends Controller
                         "target"=>$center,
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
-                        "created_at"=> date("Y-m-d"),
+                        "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName
                     ];
@@ -654,7 +666,7 @@ class WarehouseController extends Controller
                         "target"=>$center,
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
-                        "created_at"=> date("Y-m-d"),
+                        "created_at"=>$this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName
                     ];
@@ -696,7 +708,7 @@ class WarehouseController extends Controller
                         "target"=>$center,
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
-                        "created_at"=> date("Y-m-d"),
+                        "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName,
                         'warehouseTo'=>$this->wLoginByCenter($center)
@@ -727,7 +739,7 @@ class WarehouseController extends Controller
                         "target"=>$center,
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
-                        "created_at"=> date("Y-m-d"),
+                        "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName,
                         'warehouseTo'=>$this->wLoginByCenter($center)
@@ -753,7 +765,7 @@ class WarehouseController extends Controller
                         "target"=>$center,
                         "targetType"=>1,
                         "warehouse"=>Auth::id(),
-                        "created_at"=> date("Y-m-d"),
+                        "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName,
                         'warehouseTo'=>$this->wLoginByCenter($center)
@@ -774,6 +786,7 @@ class WarehouseController extends Controller
 
     public function consume(Request $request,$cent){
         extract(Input::All());
+        
         $author = Auth::id();
         $rules = array(
             'file' => 'required',
@@ -790,6 +803,7 @@ class WarehouseController extends Controller
             }
         
         if ($request->hasFile('file')) {
+            $this->date = $date;
             $data = $this->upload($request);
          if($data == "error"){
             return redirect()->back()->with(["message"=>'Record Already Exists.']);
@@ -832,7 +846,7 @@ class WarehouseController extends Controller
                         "target"=>$center,
                         "targetType"=>2,
                         "warehouse"=>Auth::id(),
-                        "created_at"=> date("Y-m-d"),
+                        "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName
                     ];
@@ -845,5 +859,143 @@ class WarehouseController extends Controller
         Render::insert($item);
         //echo $this->fileName;die;
        //dd($item);
+    }
+
+   
+
+   public function return(Request $request,$cent){
+        extract(Input::All());
+        
+        $author = Auth::id();
+        $rules = array(
+            'file' => 'required',
+            'start' => 'required',
+            'sheet' => 'required',
+        );
+     //   dd($request);
+        if($request->isMethod('post')){
+            $validator = Validator::make(Input::all(), $rules);
+             // process the form
+            if ($validator->fails()) 
+            {  echo "fai";
+                return redirect()->back()->withErrors($validator);
+            }
+        
+        if ($request->hasFile('file')) {
+             $this->date = $date;
+            $data = $this->upload($request);
+         if($data == "error"){
+            return redirect()->back()->with(["message"=>'Record Already Exists.']);
+         }
+         if(!empty($data)){
+             $this->returnByCenter($data, $center);
+             $this->returnByCenterNci($center,$startNci);
+             $this->returnByCenterCi($center,$startCi);
+         }
+        }else{
+            redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
+        }
+        }
+        $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
+        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        $cnt1 = Center::pluck("centerName","id")->toArray();
+        $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>3])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+         $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $collection = new Collection($data);
+        $perPage = 10;
+        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        //dd($units);
+        return view("warehouse.center",["left_title"=>"warehouse","centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableRender","input"=>"return"]);
+    }
+    public function returnByCenter(array $data, $center){
+        $sub = ["MATHS"=>"ME","ENGLISH"=>"EE","ME"=>"ME","EE"=>"EE"];
+        $this->time = time();
+        foreach($data as $row){
+            $index = $row["subject"];
+            if(isset($sub[$index])):
+             $item_group =  @$sub[$index]." WKS ".$row["level"];
+            endif;
+            foreach ($row as $key=>$rows){
+              // if(is_numeric($key) && $rows > 0 && $row["level"] !="LEVEL" && $row["level"] !=null) echo $row["level"]." ".$rows."<br>";
+               if(is_numeric($key) && $rows > 0 && $row["level"] !="LEVEL" && $row["level"] !=null):
+                 $item_key = $item_group." ".$this->zeroPadding($key);
+                $item_code = Item::where("item","like","%".$item_key."%")->pluck("id")->toArray();
+                if(($item_code) && $rows > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$rows*(-1),
+                        "target"=>$center,
+                        "targetType"=>3,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> $this->date,
+                        "updated_at"=> $this->time,
+                        'filename'=>$this->fileName
+                    ];
+                }
+              //  $item[$item_code] = $rows;
+                endif;
+            }
+        }//die;
+        Render::insert($item);
+        //echo $this->fileName;die;
+       //dd($item);
+    }
+    public function returnByCenterNci($center,$start=11){
+        $sheet=1;
+        $item=[];
+       config(['excel.import.startRow' => $start]);
+            $data = Excel::selectSheetsByIndex($sheet)->load($this->fileName, function($reader) {
+                  // $reader->noHeading();
+            })->toArray();//dd($data);
+            foreach($data as $row){
+                $item_code = Item::where("code","=",$row['itemcode'])->pluck("id")->toArray();
+                if($row["level"] == 'Z1' || $row["level"] == 'Z2'){
+                    $item_group =  "PSE WKS ".$row["level"];
+                }
+                if($row["level"] =='ZII'){
+                     $item_group =  "PSE WKS Z2";
+                }
+                if(($item_code) && $row["qty_order"] > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$row["qty_order"]*(-1),
+                        "target"=>$center,
+                        "targetType"=>3,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=> $this->date,
+                        "updated_at"=> $this->time,
+                        'filename'=>$this->fileName
+                    ];
+                }
+            }//dd($item);
+        Render::insert($item);
+    }
+    public function returnByCenterCi($center,$start=17){
+        $sheet=2;
+        $item=[];
+       config(['excel.import.startRow' => $start]);
+            $data = Excel::selectSheetsByIndex($sheet)->load($this->fileName, function($reader) {
+                  // $reader->noHeading();
+            })->toArray();//dd($data);
+            foreach($data as $row){
+                $item_code = Item::where("code","=",$row['code'])->pluck("id")->toArray();
+                if(($item_code) && $row["qty_ordered"] > 0){
+                    $item_code = $item_code[0];
+                    $item[] = [
+                        "item"=>$item_code,
+                        "quantity"=>(int)$row["qty_ordered"]*(-1),
+                        "target"=>$center,
+                        "targetType"=>3,
+                        "warehouse"=>Auth::id(),
+                        "created_at"=>$this->date,
+                        "updated_at"=> $this->time,
+                        'filename'=>$this->fileName
+                    ];
+                }
+            }//dd($item);
+         Render::insert($item);
     }
 }

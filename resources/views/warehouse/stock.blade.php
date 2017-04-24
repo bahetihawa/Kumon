@@ -3,12 +3,8 @@
 @section('left_title')
     @if(isset($input) && $input =="consignment" || !isset($input))
         New Purchase
-    @endif
-    @if(isset($input) && $input =="render")
-        New Record
-    @endif
-     @if(isset($input) && $input =="consume")
-        New Consumption Record
+    @else
+       New Record
     @endif
 @endsection
 @section('content')
@@ -25,6 +21,7 @@
                 <li class="list-group-item"><a href="{{ url('transfer/0') }}">Stock : Transfer @ Warehouses</a></li>
                 <li class="list-group-item"><a href="{{ url('render/0') }}">Stock : Issue to Center</a></li>
                  <li class="list-group-item"><a href="{{ url('consume/0') }}">Stock : Consumed By Center</a></li>
+                  <li class="list-group-item"><a href="{{ url('return/0') }}">Stock : Returned By Center</a></li>
             </ul>
         </div>
     </div>

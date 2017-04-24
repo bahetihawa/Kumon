@@ -169,3 +169,4 @@ $(".selectW").change(function(){
         $('.selectC').html(res);
     });
 });
+$("#calender").datepicker({dateFormat: 'yy-mm-dd'});
