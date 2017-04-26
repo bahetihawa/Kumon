@@ -112,4 +112,8 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::match(['get','post'],'/uploadStacks', "UtilityController@uploadStacks")->name("uploadStacks");
      //Route::match(['get','post'],'/stockCenter', "UtilityController@stockCenter")->name("stockCenter");
+    
+    Route::match(['get','post'],'/loadStacks', "UtilityController@loadStacks")->name("loadStacks");
+    Route::match(['get','post'],'/opening', "StoreController@index")->name("opening");
+    Route::match(['get','post'],'/matchStacks', "UtilityController@matchStacks")->name("matchStacks");
 });

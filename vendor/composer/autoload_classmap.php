@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'AddTrigger' => $baseDir . '/database/migrations/2017_02_01_104750_add_trigger.php',
     'AddTriggerItem' => $baseDir . '/database/migrations/2017_02_01_121128_add_trigger_item.php',
+    'AfterUpdateStoks' => $baseDir . '/database/migrations/2017_04_26_104534_after_update_stoks.php',
     'CreateCategoriesTable' => $baseDir . '/database/migrations/2017_01_13_073627_create_categories_table.php',
     'CreateCentersTable' => $baseDir . '/database/migrations/2017_01_11_105200_create_centers_table.php',
     'CreateConsignmentsTable' => $baseDir . '/database/migrations/2017_01_21_110124_create_consignments_table.php',

@@ -3,7 +3,27 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/bahetihawa/Desktop/kumon/resources/views/include/tableLevelStock.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/tableRender.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/app/Http/Controllers/UtilityController.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/topnav.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/footer.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/app/Consignment.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/tableCenterCiNci.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/head.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/centers.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/stockInputForm.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/grn.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/routes/web.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/public/css/style.css</file>
+            <file>file:/home/itcombine/Desktop/inventory/app/Http/Controllers/StoreController.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/warehouse/stock.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/app/Http/Controllers/InventoryController.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/topnavW.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/warehouses.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/app/Http/Controllers/WarehouseController.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/resources/views/include/tableConsignment.blade.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/app/Http/Controllers/SetUpController.php</file>
+            <file>file:/home/itcombine/Desktop/inventory/public/js/script.js</file>
         </group>
     </open-files>
 </project-private>

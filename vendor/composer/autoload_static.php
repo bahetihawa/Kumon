@@ -301,6 +301,7 @@ class ComposerStaticInit12b52cad209d91823cf093922f4b8381
     public static $classMap = array (
         'AddTrigger' => __DIR__ . '/../..' . '/database/migrations/2017_02_01_104750_add_trigger.php',
         'AddTriggerItem' => __DIR__ . '/../..' . '/database/migrations/2017_02_01_121128_add_trigger_item.php',
+        'AfterUpdateStoks' => __DIR__ . '/../..' . '/database/migrations/2017_04_26_104534_after_update_stoks.php',
         'CreateCategoriesTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_13_073627_create_categories_table.php',
         'CreateCentersTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_11_105200_create_centers_table.php',
         'CreateConsignmentsTable' => __DIR__ . '/../..' . '/database/migrations/2017_01_21_110124_create_consignments_table.php',

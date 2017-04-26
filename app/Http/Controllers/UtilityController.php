@@ -463,8 +463,9 @@ class UtilityController extends Controller
                   } //dd($ware);
             }
         }  
+        Render::insert($insert); 
       }
-         Render::insert($insert);              
+                      
         //dd($insert);
         return view('uploadStack');
     }
@@ -482,5 +483,62 @@ class UtilityController extends Controller
         readfile($filename);
         return back();
     }
+    
+    public function loadStacks(){
+       $x = User::where('role',3)->pluck('id')->toArray();
+       foreach($x as $vs):
+            $author = $vs;
+            $data = array();
+            $roles = Stoks::where("warehouse",$author)->pluck('specify')->toArray();
+            $id = Item::whereNotIn("id",$roles)->get();
+            foreach($id as $v){
+                 $data[] = ["category"=>$v->category,
+                             "unit_price"=>0,
+                             "count"=>0,
+                             "specify"=>$v->id,
+                             "warehouse"=>$author
+                     ];
+            }
+        
+       Stoks::insert($data);
+       endforeach;
+    }
+    
+    public function matchStacks(Request $request){
+        ini_set('max_execution_time', 300);
 
+       
+        if ($request->isMethod('post'))
+        {
+            extract(Input::All());
+            $file = $request->file('file');
+            $fileName = $file->getClientOriginalName();
+            $destinationPath = 'uploads';
+             @unlink($destinationPath."/".$fileName);
+            if(file_exists($destinationPath."/".$fileName)){
+                $err = "error";
+                return $err;
+            }else{
+                $file->move($destinationPath,$fileName);
+                 $this->fileName = $destinationPath."/".$fileName;
+                //config(['excel.import.startRow' => 1]);
+                $data = Excel::selectSheetsByIndex(0)->load($destinationPath."/".$fileName, function($reader) {
+                      
+                })->toArray();
+             //  dd($data);
+                $dd = array();
+                foreach ($data as $key => $value) {
+                  $dat = Item::where('items.code',$value['code'])->pluck('id')->toArray();
+                  if($dat[0]==''){
+                      $dd[]=$value['code'];
+                  }
+                }
+                dd($dd);
+             //return $data;
+            }
+        }
+        return view('uploadStack');
+        
+
+    }
 }

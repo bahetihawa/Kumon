@@ -46,8 +46,11 @@
     </ul>
 </li>
 <li class="dropdown">
-    <a class=""  href="{{ url('stockStatusAll') }}">Download Stock Status
-     
+    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:voide(0)">Stock Status
+     <span class="caret"></span>
     </a>
-    
+    <ul class="dropdown-menu">
+        <li><a href="{{ url('stockStatusAll') }}">Download Stock Status</a></li>
+        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#opening">Opening Stock Month Wise</a></li>
+    </ul>
 </li>
