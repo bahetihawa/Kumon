@@ -31,7 +31,7 @@ class StoreController extends Controller
     }
     
     public function index(){
-        extract(Input::all());
+        extract(Input::all());dd(date('y-m-d'));
         $wh = User::where('role',3)->pluck('id')->toArray();//dd($wh);
        foreach ($wh as $key => $value) {
            $data[$value] = $this->opening($value);
