@@ -3,9 +3,12 @@
         <div class="col-md-7">
             <h4>Instruction</h4>
             <ol>
+                    <li>Choose a date for which records being added.</li>
+                    <li>Select a recipient center assosiated with your ware house</li>
                     <li>File: Browse excell file containing appropriate format of sheet</li>
-                    <li>Starting Line:  Line no. of sheet where from header starts.</li>
-                    <li>Sheet No.: Index no. of sheet. Start counting from `0`. </li>
+                    <li>File should have three differnt sheets- 1st for wks, 2nd for NCi and 3rd for CI in disignated formate</li>
+                    <li>Starting Line:  Line no. of sheet where from header starts for each sheet in given respective input field.</li>
+                    <!--li>Sheet No.: Index no. of sheet. Start counting from `0`. </li-->
                     
                 </ol>
         </div>
@@ -34,6 +37,7 @@
             <div class="slideInfo col-md-7">
                 <h4>Instruction:</h4>
                 <ol>
+                     <li>Choose a date for which records being added.</li>
                     <li>File: Browse excell file containing appropriate format of sheet</li>
                     <li>Starting Line:  Line no. of sheet where from header starts.</li>
                     <li>Sheet No.: Index no. of sheet. Start counting from `0`. </li>
@@ -67,9 +71,12 @@
         <div class="col-md-7">
             <h4>Instruction</h4>
             <ol>
+                     <li>Choose a date for which records being added.</li>
+                    <li>Select a warehouse which recipient center belongs to.</li>
+                    <li>Select a recipient center assosiated with your ware house</li>
                     <li>File: Browse excell file containing appropriate format of sheet</li>
-                    <li>Starting Line:  Line no. of sheet where from header starts.</li>
-                    <li>Sheet No.: Index no. of sheet. Start counting from `0`. </li>
+                    <li>File should have three differnt sheets- 1st for wks, 2nd for NCi and 3rd for CI in disignated formate</li>
+                    <li>Starting Line:  Line no. of sheet where from header starts for each sheet in given respective input field.</li>
                     
                 </ol>
         </div>
@@ -99,7 +106,8 @@
     <div class="row">
         <div class="col-md-7">
             <h4>Instruction</h4>
-            <ol>
+            <ol>     <li>Choose a date for which records being added.</li>
+                     <li>Choose type of worksheet ME or EE.</li>
                     <li>File: Browse excell file containing appropriate format of sheet</li>
                     <li>Starting Line:  Line no. of sheet where from header starts.</li>
                     <li>Sheet No.: Index no. of sheet. Start counting from `0`. </li>
@@ -131,9 +139,11 @@
         <div class="col-md-7">
             <h4>Instruction</h4>
             <ol>
+                    <li>Choose a date for which records being added.</li>
+                    <li>Select a recipient center assosiated with your ware house</li>
                     <li>File: Browse excell file containing appropriate format of sheet</li>
-                    <li>Starting Line:  Line no. of sheet where from header starts.</li>
-                    <li>Sheet No.: Index no. of sheet. Start counting from `0`. </li>
+                    
+                    <li>Starting Line:  Line no. of sheet where from header starts for each sheet in given respective input field.</li>
                     
                 </ol>
         </div>
