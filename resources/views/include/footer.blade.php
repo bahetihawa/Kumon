@@ -23,7 +23,7 @@
                 
                 }
            ?>
-          {{ Form::open(array('url' => '/opening','files'=>'true','class'=>'form','target'=>'_blank'))}}
+          {{ Form::open(array('url' => '/opening','files'=>'true','class'=>'form','target'=>'_blank','id'=>'op'))}}
 
             {!! 'Choose a Year.' !!}<br>
             {!! Form::select('year',$year,null, ['class' => 'form-control','id'=>'yr','required'=>'true']) !!}<br>
@@ -67,7 +67,7 @@
                 
                 }
            ?>
-          {{ Form::open(array('url' => '/openingW','files'=>'true','class'=>'form','target'=>'_blank'))}}
+          {{ Form::open(array('url' => '/openingW','files'=>'true','class'=>'form','target'=>'_blank','id'=>'op1'))}}
 
             {!! 'Choose a Year.' !!}<br>
             {!! Form::select('year',$year,null, ['class' => 'form-control','id'=>'yr1','required'=>'true']) !!}<br>
@@ -115,4 +115,9 @@
       $("#mnt1").html('<?= $month1;?>')
     }
   });
+</script>
+<script>
+   $("#op,#op1").submit(function(){
+    window.location.reload();
+   });
 </script>
