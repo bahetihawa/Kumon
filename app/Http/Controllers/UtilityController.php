@@ -121,7 +121,7 @@ class UtilityController extends Controller
     }
     public function getDn($file){
        // $order = Orders::where('updated_at',$file)->pluck('orderNo')[0];
-        $data = Render::where("updated_at",$file)->with('Items')->get()->toArray();
+        $data = Render::where(["updated_at"=>$file,'warehouse'=>Auth::id()])->with('Items')->get()->toArray();
         $ct =   Auth::id();
         $center = Warehouse::where("id",$ct)->get()->toArray()[0];
        $code = $this->getCodeRef("DN",$center['centerCode'],$file);
@@ -129,7 +129,7 @@ class UtilityController extends Controller
         $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
         $center['province'] = Province::where('id',$center['province'])->pluck('province')[0];
         $center['district'] = District::where('id',$center['district'])->pluck('district')[0];
-       //dd($center);
+     //  dd($data);
         Excel::create('DN_'.$code, function($excel) use ($file,$data,$center,$code,$prc) {
 
             // Set the title
@@ -141,7 +141,8 @@ class UtilityController extends Controller
             $excel->setDescription('GRN of ');
             
             $excel->sheet($file, function($sheet) use ($file,$data,$center,$code,$prc){
-
+                $sheet->setFreeze('F20');
+               $sheet->setAutoSize(false);
                 $sheet->loadView('dn',["data"=>$data,'center'=>$center,'date'=>$file,'grnRef'=>$code,'price'=>$prc]);
 
             });
@@ -169,7 +170,7 @@ class UtilityController extends Controller
     
     public function getTn($file){
        // $order = Orders::where('updated_at',$file)->pluck('orderNo')[0];
-        $data = Transfer::where("updated_at",$file)->with('Items')->get()->toArray();
+        $data = Transfer::where("updated_at",$file)->where('warehouseTo',Auth::id())->with('Items')->get()->toArray();
         $ct =   Auth::id();
         $center = Warehouse::where("id",$ct)->get()->toArray()[0];
        $code = $this->getCodeRef("DN",$center['centerCode'],$file);
@@ -189,7 +190,8 @@ class UtilityController extends Controller
             $excel->setDescription('GRN of ');
             
             $excel->sheet($file, function($sheet) use ($file,$data,$center,$code,$prc){
-
+                 $sheet->setFreeze('F20');
+               $sheet->setAutoSize(false);
                 $sheet->loadView('tn',["data"=>$data,'center'=>$center,'date'=>$file,'grnRef'=>$code,'price'=>$prc]);
 
             });
