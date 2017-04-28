@@ -15,18 +15,15 @@
         <li><a href="{{ url('return/0') }}">Stock : Returned By Center</a></li>
     </ul>
 </li>
-<li class="">
-    <a class=""  href="{{ url('stockStatus') }}">Download Stock Status
-    </a>
-</li>
 
 
-<!--li class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:voide(0)">Profile
+<li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:voide(0)">Stock Status
      <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
+        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#opening1">Opening Stock Month Wise</a></li>
+        <li><a href="{{ url('stockStatus') }}">Download Stock Status</a></li>
         
-        <li><a href="{{ url('/users/logs') }}">Logs</a></li>
     </ul>
-</li-->
+</li>

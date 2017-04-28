@@ -252,4 +252,50 @@ class StoreController extends Controller
 
             return $wdata;
     }
+
+    public function openingW(){
+         extract(Input::all());
+        $period = $year."-".str_pad($month,2,0,STR_PAD_LEFT)."-".cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $period .= " 23:59:59";
+        $this->period = $period;
+       //$data = array();
+        
+        
+        $wh = Auth::id();//dd($wh);
+       //foreach ($wh as $key => $value) {
+           $data = $this->opening($wh);
+       //}
+       extract($data);
+      // dd($data);
+       $fileName = 'opening_report_'.$month.'_'.$year.'_'.$were;
+       $filenameE = 'opening_report_'.$month.'_'.$year.'_'.$were.'.xlsx';
+        $filePathName = 'exports/'. $filenameE;
+
+        Excel::create($fileName, function($excel) use ($data) {
+
+            // Set the title
+            $excel->setTitle('OpeningStockAllWareHouse_'.date("m-Y"));
+            // Chain the setters
+            $excel->setCreator('Roster')
+                  ->setCompany('Kumon');
+            // Call them separately
+            $excel->setDescription('date("m-Y")');
+            //foreach ($data as $k => $v) {
+                extract($data);
+            
+                $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were,$css){
+                    $sheet->setFreeze('D7');
+                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css]);
+
+                });
+            //}
+
+        })->save('xlsx','exports');
+        
+        //if(!file_exists($filePathName)){
+           // $this->gererateReport($fileName);
+       // }
+        Excel::load($filePathName)->export('xlsx');
+        return redirect()->back()->with(["message"=>'Success.']);
+    }
 }

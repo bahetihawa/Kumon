@@ -50,7 +50,8 @@
      <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
+         <li><a href="javascript:void(0)" data-toggle="modal" data-target="#opening">Opening Stock Month Wise</a></li>
         <li><a href="{{ url('stockStatusAll') }}">Download Stock Status</a></li>
-        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#opening">Opening Stock Month Wise</a></li>
+       
     </ul>
 </li>
