@@ -275,7 +275,7 @@ class UtilityController extends Controller
                 $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
 
            $wdata[$lv."000"] = ['code'=>$lv."000",'item'=>$lv,"qt"=>$data];
-           $prc = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
+           $prc = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
                 $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->first()->unit_price;
            $totCent = 0;
            foreach ($cent as $key1 => $value1) {
