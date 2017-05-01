@@ -42,4 +42,21 @@ input[type="file"] {
 .pagination{
     margin: 5px;
 }
-
+body{
+    font-family: initial;
+}
+.minHeight{
+    min-height: 85vh;
+}
+.panel{
+    background: aliceblue;
+}
+.list-group-item {
+    background-color: aliceblue;
+ }
+ .pagination > li > a, .pagination > li > span ,.pagination >.disabled > span{
+    background-color: aliceblue;
+}
+.modal-content {
+    background: aliceblue;
+}

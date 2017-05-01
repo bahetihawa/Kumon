@@ -12,7 +12,7 @@
     @endif
 @endsection
 @section('content')
-    <div class="panel panel-default col-md-3 left-nav">
+    <div class="panel panel-info col-md-3 left-nav">
         <div class="panel-heading">Menu</div>
         <div class="panel-body">
            <ul class="list-group">
@@ -23,7 +23,7 @@
             </ul>
         </div>
     </div>
-    <div class="panel panel-default col-md-9">
+    <div class="panel panel-info col-md-9">
         <div class="panel-heading row">
             <a id="addNew" class='col-md-6' href="javascript:void(0)" onclick="$('#myModal').modal()">
                 Add @yield('left_title')

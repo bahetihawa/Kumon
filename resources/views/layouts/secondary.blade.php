@@ -6,10 +6,10 @@
 <body>
     <div id="app">
         @include('include.header')
-        <div class="container">
+        <div class="container minHeight">
 			<div class="row">
 				<div class="col-md-4 col-sm-4 leftPan">
-					<div class="panel panel-default">
+					<div class="panel panel-info">
 						<div class="panel-heading">@yield('left_title') <a class="pull-right" id="addNew" href="javascript:void(0)">Add @yield('left_title')</a></div>
 						<div class="panel-body">
 							<ul class="list-group">
@@ -19,7 +19,7 @@
 					</div>
 				</div>
 				<div class="col-md-8 col-sm-8 fade rightPan">
-					<div class="panel panel-default">
+					<div class="panel panel-info">
 						<div class="panel-heading">
 							<span class="CountryName"> Center</span> 
 							<span class="pull-right"> 

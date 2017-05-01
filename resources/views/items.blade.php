@@ -4,9 +4,9 @@
     Countries
 @endsection
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid minHeight">
     <div class="row">
-         <div class="panel panel-default col-md-3 left-nav">
+         <div class="panel panel-info col-md-3 left-nav">
             <div class="panel-heading">Menu</div>
             <div class="panel-body">
                <ul class="list-group">
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="col-md-9 Category">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading">
                     <a class="pull-left" id="addCat" href="javascript:void(0)">Add Items</a>&nbsp;
                     @include("include.search")

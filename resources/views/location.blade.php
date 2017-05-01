@@ -4,10 +4,10 @@
     Countries
 @endsection
 @section('content')
-<div class="container">
+<div class="container minHeight">
     <div class="row">
         <div class="col-md-4 col-md-4 countries">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading">Locations <a class="pull-right" id="addLocation" href="javascript:void(0)">Add Country</a></div>
                 <div class="panel-body">
                     <ul class="list-group">
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="col-md-4 col-md-4 fade states">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading"><span class="CountryName"> Country</span>  <a class="pull-right" id="addState" href="javascript:void(0)">Add State</a></div>
 
                 <div class="panel-body">
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="col-md-4 col-md-4 fade districts">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading"><span class="stateName"> State</span> <a class="pull-right" id="addDistrict" href="javascript:void(0)">Add District</a></div>
 
                 <div class="panel-body">

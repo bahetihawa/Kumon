@@ -4,10 +4,10 @@
     Countries
 @endsection
 @section('content')
-<div class="container">
+<div class="container minHeight">
     <div class="row">
         <div class="col-md-4 col-md-4 Category">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading">Categories <a class="pull-right" id="addCat" href="javascript:void(0)">Add Category</a></div>
                 <div class="panel-body">
                     <ul class="list-group">
@@ -21,7 +21,7 @@
             </div>
         </div>
         <div class="col-md-4 col-md-4 fade Sub-Category">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading"><span class="CountryName"> Sub Category</span></div>
 
                 <div class="panel-body">
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="col-md-4 col-md-4 fade sSub-Category">
-            <div class="panel panel-default">
+            <div class="panel panel-info">
                 <div class="panel-heading"><span class="stateName"> State</span> </div>
 
                 <div class="panel-body">

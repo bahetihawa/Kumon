@@ -6,11 +6,11 @@
 <body>
     <div id="app">
         @include('include.header')
-        <div class="container">
+        <div class="container minHeight">
 			<div class="row">
 				
 				<div class="col-md-8 col-sm-8 col-md-offset-2">
-					<div class="panel panel-default">
+					<div class="panel panel-info">
 						<div class="panel-heading">
 							Upload Item List
 							

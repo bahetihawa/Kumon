@@ -1,6 +1,6 @@
 @extends('layouts.stackStatus')
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid minHeight">
 <table class="table table-condensed table-bordered"><?php $i =1;?>
 	<tr>
 		@foreach($header as $l => $head)

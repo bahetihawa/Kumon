@@ -15,7 +15,7 @@
 
                             <div class="col-md-6">
                                 <input id="cente" type="radio" class="col-md-4 fade" value="2" name="role" data="center" disabled ="" required> <label class="col-md-8 fade" for="cente">Center</label>
-                                <input id="ware" type="radio" class="col-md-4" value="3" name="role" data="warehouse" checked = "" required> <label class="col-md-8" for="ware">Warehouse</label>
+                                <input id="ware" type="radio" class="col-md-4" value="3" name="role" data="warehouse"  required> <label class="col-md-8" for="ware">Warehouse</label>
                                 
                                 @if ($errors->has('role'))
                                     <span class="help-block">
@@ -104,5 +104,6 @@
         </div>
     </div>
 </div>
+
 @endsection
 

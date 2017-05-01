@@ -170,3 +170,5 @@ $(".selectW").change(function(){
     });
 });
 $("#calender").datepicker({dateFormat: 'yy-mm-dd'});
+
+$(".panel-default").addClass('panel-info').removeClass('panel-default');

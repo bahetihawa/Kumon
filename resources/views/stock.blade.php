@@ -4,7 +4,7 @@
     New Consignment
 @endsection
 @section('content')
-    <div class="panel panel-default col-md-3 left-nav">
+    <div class="panel panel-info col-md-3 left-nav">
         <div class="panel-heading">Menu</div>
         <div class="panel-body">
            <ul class="list-group">
@@ -15,7 +15,7 @@
             </ul>
         </div>
     </div>
-    <div class="panel panel-default col-md-9">
+    <div class="panel panel-info col-md-9">
         <div class="panel-heading row">
             <a href="javascript:void(0)" class="col-md-6">Warehouse: {{$wareName}}</a>
             @include('include.search')

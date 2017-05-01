@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container minHeight">
     <div class="row" onload="display_ct();">
         
             <div class="center">
