@@ -863,7 +863,7 @@ class WarehouseController extends Controller
 
    
 
-   public function return(Request $request,$cent){
+   public function returnStock(Request $request,$cent){
         extract(Input::All());
         
         $author = Auth::id();
@@ -877,7 +877,7 @@ class WarehouseController extends Controller
             $validator = Validator::make(Input::all(), $rules);
              // process the form
             if ($validator->fails()) 
-            {  echo "fai";
+            {  //echo "fai";
                 return redirect()->back()->withErrors($validator);
             }
         
