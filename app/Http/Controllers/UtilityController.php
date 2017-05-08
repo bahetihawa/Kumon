@@ -150,7 +150,8 @@ class UtilityController extends Controller
         })->export('xlsx');
     }
     public function getCodeRef($text,$center,$time){
-        $month =  $date = date('m', $time);
+        $month =  date('m', $time);
+        $date = date('d',$time);
         $year = date('y', $time);
         if($month > 3){
             $code = $month-3;
@@ -159,7 +160,7 @@ class UtilityController extends Controller
             $code = $month+9;
             $ses = ($year-1)."-".$year;
         }
-        return $text."/".$center."/".$ses."/".str_pad($code, 3, '0', STR_PAD_LEFT);
+        return $text."/".$center."/".$ses."/".str_pad($code, 3, '0', STR_PAD_LEFT)."_".$date;
     }
     public function getCent(){
         $id = Input::get('id');

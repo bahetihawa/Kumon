@@ -38,6 +38,7 @@ use Illuminate\Support\Collection;
  */
 class WarehouseController extends Controller
 {
+    public $ConsumeType = '';
     public function __construct()
     { 
          ini_set('max_execution_time', 300);
@@ -399,7 +400,7 @@ class WarehouseController extends Controller
                         $y = Orders::where("id",$x->id)->update([
                             "warehouse"=>$author,
                             "orderNo"=>$this->order,
-                            "orderDate"=>date("Y-m-d H:i:s"),
+                            "orderDate"=>$date,
                             "freight"=>$freight,
                             "others"=>$other,
                             "cnf"=>$cnf,
@@ -485,7 +486,7 @@ class WarehouseController extends Controller
     public function upload($request){
         extract(Input::All());
         $file = $request->file('file');
-        $fileName = $file->getClientOriginalName();
+        $fileName = $this->ConsumeType."_".$file->getClientOriginalName();
         $destinationPath = 'uploads';
         if(file_exists($destinationPath."/".$fileName)){
             $err = "error";
@@ -521,11 +522,13 @@ class WarehouseController extends Controller
        $arr = Stoks::where("warehouse",$author)->pluck("id")->toArray();
        foreach($arr as $vl){
            $query = Stoks::find($vl);
+        if($query->count > 0):
            $total = $query->unit_price * $query->count;
            $newTotal = (1+$ratio)*$total;
            $newPrice = $newTotal/$query->count;
            $query->unit_price = $newPrice;
            $query->save();
+        endif;
        }
        return redirect()->back()->with(["message"=>'Record Added successfully']);
     }
@@ -786,7 +789,7 @@ class WarehouseController extends Controller
 
     public function consume(Request $request,$cent){
         extract(Input::All());
-        
+
         $author = Auth::id();
         $rules = array(
             'file' => 'required',
@@ -803,6 +806,7 @@ class WarehouseController extends Controller
             }
         
         if ($request->hasFile('file')) {
+            $this->ConsumeType = $type;
             $this->date = $date;
             $data = $this->upload($request);
          if($data == "error"){
