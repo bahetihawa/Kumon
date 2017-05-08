@@ -474,14 +474,14 @@ class UtilityController extends Controller
     }
 
     public function downloadRender($file){
-        $filename1 = Render::where("updated_at",$file)->pluck("filename")->first();
-        $filename = "uploads/".$filename1;
-        if(!file_exists($filename)){
+        $filename1 = Render::where("updated_at",$file)->first()->filename;
+        $filename = $filename1;
+       if(!file_exists($filename)){
             return back()->with(["message"=>"Record Id: ".$file." : Requested file moved or deleted"]);
         }
         header("Cache-Control: public");
         header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename= ".$filename1);
+        header("Content-Disposition: attachment; filename= ".$filename);
         header("Content-Transfer-Encoding: binary");    
         readfile($filename);
         return back();
