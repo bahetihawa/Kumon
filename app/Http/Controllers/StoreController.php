@@ -168,60 +168,54 @@ class StoreController extends Controller
         $totVal = 0;$stkId = $this->stkLogId;//dd($stkId);
         $iLevel = (new UtilityController)->level_get();
         foreach ($iLevel as $key => $lv) {
-            $lvs = explode(" ", $lv);
+           // $lvs = explode(" ", $lv);
+            $kv = trim($key);
+            $kvs = trim($lv);
             $data = StoksLog::where(["warehouse"=>$author,'category'=>1])
                         ->where('created_at','<',$this->period)
                         ->whereIn('id',$stkId)
-                        ->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
-                                $q->where('item','like', '%'.$lvs[0].'%')
-                                    ->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')
-                                    ->where('item','like', '%'.$lvs[2].'%');})
+                        ->with("Items")->whereHas('Items', function($q) use ($lv){
+                                $q->where('item','like', '%'.$lv.'%');})
                         ->sum('count');
 
-           $wdata[$lv."000"] = ['code'=>$lv."000",'item'=>$lv,"qt"=>$data];
+           $wdata[$kvs."000"] = ['code'=>$kvs."000",'item'=>$kv,"qt"=>$data];
 
            $prc = StoksLog::where(["warehouse"=>$author,'category'=>1])
                             ->where('created_at','<',$this->period)->where('unit_price','!=',0)
                             ->orderBy('id','desc')
                             ->limit(1)
-                            ->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
-                                $q->where('item','like', '%'.$lvs[0].'%')
-                                    ->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')
-                                    ->where('item','like', '%'.$lvs[2].'%');})
+                            ->with("Items")->whereHas('Items', function($q) use ($lv){
+                                $q->where('item','like', '%'.$lv.'%');})
                 ->first()->unit_price;
            $this->totCent = 0;
            foreach ($cent as $key1 => $value1) {
 
                 $data1 = Render::where(["warehouse"=>$author,'target'=>$key1])
                                 ->where('created_at','<',$this->period)
-                                ->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                                    $q->where('item','like', '%'.$lvs[0].'%')
-                                        ->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')
-                                        ->where('item','like', '%'.$lvs[2].'%')
+                                ->with("Items")->whereHas('Items', function($q) use ($lv){
+                                    $q->where('item','like', '%'.$lv.'%')
                                         ->where('items.category',1);});
              $qt = $data1->sum('quantity');
                 //$data = $qt;
 
                 $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$key1])
                                 ->where('created_at','<',$this->period)
-                                ->with("Items")->whereHas('Items', function($q2) use ($lv,$lvs){
-                                    $q2->where('item','like', '%'.$lvs[0].'%')
-                                        ->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')
-                                        ->where('item','like', '%'.$lvs[2].'%')
+                                ->with("Items")->whereHas('Items', function($q2) use ($lv){
+                                    $q2->where('item','like', '%'.$lv.'%')
                                         ->where('items.category',1);});
                 $qt2 = $data2->sum('quantity');
                // $data_tr = $qt2;
                 $qtx = $qt+$qt2;
-                 $wdata[$lv."000"][$value1] = $qtx;
+                 $wdata[$kvs."000"][$value1] = $qtx;
                 $this->totCent = $this->totCent+$qtx;
                  $totVal +=$qtx*$prc;
             }
-            $wdata[$lv."000"]['tot_cent'] =$this->totCent;
-            $wdata[$lv."000"]['tot_wh'] = $this->totCent+$data;
-            $wdata[$lv."000"]['wac'] = $prc;
-            $wdata[$lv."000"]['val_cent'] = $prc*$this->totCent;
-            $wdata[$lv."000"]['stack_val'] = ($this->totCent+$data)*$prc;
-            $this->css[] = $lv."000";
+            $wdata[$kvs."000"]['tot_cent'] =$this->totCent;
+            $wdata[$kvs."000"]['tot_wh'] = $this->totCent+$data;
+            $wdata[$kvs."000"]['wac'] = $prc;
+            $wdata[$kvs."000"]['val_cent'] = $prc*$this->totCent;
+            $wdata[$kvs."000"]['stack_val'] = ($this->totCent+$data)*$prc;
+            $this->css[] = $kvs."000";
         }
         $this->totVal = $this->totVal+$totVal;
         return $wdata;

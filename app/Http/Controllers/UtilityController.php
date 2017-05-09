@@ -227,18 +227,21 @@ class UtilityController extends Controller
     }
 
 
-    public function level_get(){
-         $wks = Category::where('category',"wks")->pluck('id');
-       $parent = $wks[0];
-       $cat = Category::where('parent',$parent)->get()->toArray();
-      foreach($cat as $cats){
-          $sCat = Category::where('parent',$cats['id'])->get()->toArray();
-          foreach ($sCat as $level){
-            $iLevel[] = $cats['category']." WKS ".$level["category"];
-            
-          }
-      }
+     public function level_get(){
       
+      $d = Item::where('category',1)
+                ->where('code','not like','%000')
+                ->where('item','not like','%PSE%')
+                ->orderBy('item')
+                ->pluck('item')
+                ->toArray();
+
+      foreach ($d as $key => $value) {
+        $x =  substr(trim($value), 0, -3);
+        $Level[$x] = $x;
+      }
+      $Level['PSE WKS Z1-Z2'] = 'PSE WKS Z';
+         $iLevel= array_unique($Level);
       return $iLevel;
     }
 
@@ -273,23 +276,23 @@ class UtilityController extends Controller
         //dd($wdata);
         $iLevel = $this->level_get();
         foreach ($iLevel as $key => $lv) {
-            $lvs = explode(" ", $lv);
-            $data = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
+           
+            $data = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->sum('count');
 
-           $wdata[$lv."000"] = ['code'=>$lv."000",'item'=>$lv,"qt"=>$data];
-           $prc = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->first()->unit_price;
+           $wdata[$key."000"] = ['code'=>$lv."000",'item'=>$lv,"qt"=>$data];
+           $prc = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->first()->unit_price;
            $totCent = 0;
            foreach ($cent as $key1 => $value1) {
 
-                $data1 = Render::where(["warehouse"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $data1 = Render::where(["warehouse"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
                 $qt = $data1->sum('quantity');
                 //$data = $qt;
 
-                $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q2) use ($lv,$lvs){
-                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q2) use ($lv){
+                $q2->where('item','like', '%'.$lv.'%');});
                 $qt2 = $data2->sum('quantity');
                // $data_tr = $qt2;
                 $qtx = $qt+$qt2;
@@ -297,12 +300,12 @@ class UtilityController extends Controller
                  $totCent +=$qtx;
                  $totVal +=$qtx*$prc;
             }
-            $wdata[$lv."000"]['tot_cent'] = $totCent;
-            $wdata[$lv."000"]['tot_wh'] = $totCent+$data;
-            $wdata[$lv."000"]['wac'] = $prc;
-            $wdata[$lv."000"]['val_cent'] = $prc*$totCent;
-            $wdata[$lv."000"]['stack_val'] = ($totCent+$data)*$prc;
-            $css[] = $lv."000";
+            $wdata[$key."000"]['tot_cent'] = $totCent;
+            $wdata[$key."000"]['tot_wh'] = $totCent+$data;
+            $wdata[$key."000"]['wac'] = $prc;
+            $wdata[$key."000"]['val_cent'] = $prc*$totCent;
+            $wdata[$key."000"]['stack_val'] = ($totCent+$data)*$prc;
+            $css[] = $key."000";
         }//dd($wdata);
 
         $whData1 = Stoks::where("warehouse",$author)->where('category','!=',1)->with("items")->get()->toArray();

@@ -87,17 +87,8 @@ class WarehouseController extends Controller
         return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableAvailble"]);
     }
     public function wksLevel(Request $request){
-        $wks = Category::where('category',"wks")->pluck('id');
-       $parent = $wks[0];
-       $cat = Category::where('parent',$parent)->get()->toArray();
-      foreach($cat as $cats){
-          $sCat = Category::where('parent',$cats['id'])->get()->toArray();
-          foreach ($sCat as $level){
-            $iLevel[] = $cats['category']." WKS ".$level["category"];
-            //$iLevel[] = $cats['category']." REVISED WKS ".$level["category"];
-          }
-      }
-      
+     
+      $iLevel = $this->level_get();
       //dd($iLevel);
         $author = Auth::id();
         $cond = ["warehouse"=>$author];
@@ -105,42 +96,41 @@ class WarehouseController extends Controller
         if (Input::has('search'))
         {
             $cnd = trim(Input::get('search'));
-            $lvs = explode(" ", $cnd);
-            $lvs[] = "";$lvs[] = "";
+            $lv=$cnd." ";
             //foreach ($iLevel as $k=>$lv){
-                 $data[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
-                 $prc[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();
+                 $data[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lv){
+                $q->where('item','like', '%'.$lv.'%');})->sum('count');
+
+                 $prc[$cnd] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lv){
+                $q->where('item','like', '%'.$lv.'%');})->pluck('unit_price')->first();
                 
-                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($cnd,$lv){
+                $q->where('item','like', '%'.$lv.'%');});
                 $qt = $data1->sum('quantity');
                 $data_cnt[$cnd] = $qt;
 
-                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($cnd,$lvs){
-                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($cnd,$lv){
+                $q2->where('item','like', '%'.$lv.'%');});
                 $qt2 = $data2->sum('quantity');
                 $data_tr[$cnd] = $qt2;
             //}
         }else{
-            foreach ($iLevel as $lv){
-              $lvs = explode(" ", $lv);
-              //dd($lvs);
-                 $data[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->sum('count');
-                $prc[$lv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();//->pluck('unit_price');
+            foreach ($iLevel as $kv =>$lv){
+             
+                 $data[$kv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->sum('count');
+                $prc[$kv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->pluck('unit_price')->first();//->pluck('unit_price');
                 
-                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lvs,$lv){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
                 $qt = $data1->sum('quantity');
-                $data_cnt[$lv] = $qt;
+                $data_cnt[$kv] = $qt;
 
-                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($lvs,$lv){
-                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($lv){
+                $q2->where('item','like', '%'.$lv.'%');});
                 $qt2 = $data2->sum('quantity');
-                $data_tr[$lv] = $qt2;
+                $data_tr[$kv] = $qt2;
             }
           //->paginate(10);dd($data);
             //dd($data_tr);
@@ -159,36 +149,33 @@ class WarehouseController extends Controller
       $cond = ["warehouse"=>$author,'target'=>$cent];
       if (Input::has('search'))
         {
-            $lv = trim(Input::get('search'));
-            $lvs = explode(" ", $lv);
-            $lvs[]="";$lvs[]="";
-            $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+            $lv = trim(Input::get('search'))." ";
+            $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
                 $qt = $data1->sum('quantity');
                 $data[$lv] = $qt;
                 
-                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();
+                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->pluck('unit_price')->first();
 
-            $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$cent])->with("Items")->whereHas('Items', function($q2) use ($lv,$lvs){
-                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+            $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$cent])->with("Items")->whereHas('Items', function($q2) use ($lv){
+                $q2->where('item','like', '%'.$lv.'%');});
                 $qt2 = $data2->sum('quantity');
                 $data_tr[$lv] = $qt2;
         }else{
-      foreach ($iLevel as $lv){
-          $lvs = explode(" ", $lv);
-                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+      foreach ($iLevel as $kv=>$lv){
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');});
                 $qt = $data1->sum('quantity');
-                $data[$lv] = $qt;
+                $data[$kv] = $qt;
                 
-                $prc[$lv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                $q->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');})->pluck('unit_price')->first();
+                $prc[$kv] = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', '%'.$lv.'%');})->pluck('unit_price')->first();
 
-                 $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$cent])->with("Items")->whereHas('Items', function($q2) use ($lv,$lvs){
-                $q2->where('item','like', '%'.$lvs[0].'%')->where('item','like', '%'.$lvs[1]." ".$lvs[2].'%')->where('item','like', '%'.$lvs[2].'%');});
+                 $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$cent])->with("Items")->whereHas('Items', function($q2) use ($lv){
+                $q2->where('item','like', '%'.$lv.'%');});
                 $qt2 = $data2->sum('quantity');
-                $data_tr[$lv] = $qt2;
+                $data_tr[$kv] = $qt2;
       }
         }
         if($cent ==0){ $data =[];}
@@ -540,9 +527,9 @@ class WarehouseController extends Controller
       $cond = ["warehouse"=>$author];
       $cnd = [1 ];
       foreach ($iLevel as $lv){
-        $lvs = explode(" ", $lv);
-                $data1 = Consignment::where($cond)->where('orderNo',$order)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                $q->where('item','like', "%".$lvs[0].'%')->where('item','like', "%".$lvs[1]." ".$lvs[2].'%')->where('item','like', "%".$lvs[2].'%');});
+      
+                $data1 = Consignment::where($cond)->where('orderNo',$order)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', "%".$lv.'%');});
                 $qt = $data1->sum('quantity');
                 $total = $data1->sum("total");
                 $tot_amt = $total+$pp[$lv]['amt'];
@@ -556,17 +543,20 @@ class WarehouseController extends Controller
       //dd($prc);
     }
     public function level_get(){
-         $wks = Category::where('category',"wks")->pluck('id');
-       $parent = $wks[0];
-       $cat = Category::where('parent',$parent)->get()->toArray();
-      foreach($cat as $cats){
-          $sCat = Category::where('parent',$cats['id'])->get()->toArray();
-          foreach ($sCat as $level){
-            $iLevel[] = $cats['category']." WKS ".$level["category"];
-            
-          }
-      }
       
+      $d = Item::where('category',1)
+                ->where('code','not like','%000')
+                ->where('item','not like','%PSE%')
+                ->orderBy('item')
+                ->pluck('item')
+                ->toArray();
+
+      foreach ($d as $key => $value) {
+        $x =  substr(trim($value), 0, -3);
+        $Level[$x] = $x;
+      }
+      $Level['PSE WKS Z1-Z2'] = 'PSE WKS Z';
+         $iLevel= array_unique($Level);
       return $iLevel;
     }
     
@@ -576,9 +566,9 @@ class WarehouseController extends Controller
       $cond = ["warehouse"=>$author];
       $cnd = [1 ];
       foreach ($iLevel as $lv){
-        $lvs = explode(" ", $lv);
-                 $count = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv,$lvs){
-                $q->where('item','like', "%".$lvs[0].'%')->where('item','like', "%".$lvs[1]." ".$lvs[2].'%')->where('item','like', "%".$lvs[2].'%');})->sum('count');
+        
+                 $count = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('item','like', "%".$lv.'%');})->sum('count');
                  $up = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
                 $q->where('item','like', $lv.'%');})->pluck('unit_price')->first();
                // if($count !=0 && $up != 0 ):
