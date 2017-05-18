@@ -33,11 +33,13 @@ class OrganigerController extends Controller
             "category"=>"required",
         ]);
 		if($request['model'] == "Category"):
-                    Category::create($request->input());
+                   // Category::create($request->input());
                     return redirect()->route('catagory')->with(["message"=>'Added successfully']);
                 endif;
                 if($request['model'] == "Items"):
-                    Item::create($request->input());
+                    $this->geetItemCategory($request->input('category'));
+                    dd($request->input('category'));
+                  //  Item::create($request->input());
                     return redirect()->route('organiger.Items')->with(["message"=>'Added successfully']);
                 endif;
     }
@@ -147,12 +149,15 @@ class OrganigerController extends Controller
     }
 
     public function geetItemCategoryData($id = null,$category=[]){
-        
-        if($cat = Category::find($id)){
-            array_push($category,$id);
-            $this->geetItemCategoryData($cat->parent,$category);
+        if($id > 0){
+            if($cat = Category::find($id)){
+                //array_push($category,$id);
+                $category[] =$id;
+                $this->geetItemCategoryData($cat->parent,$category);
+            }
         }
-        return $category;
+        //echo count($category);
+        return $category;die;
     }
 
     public function geetItemCategory($id = null){

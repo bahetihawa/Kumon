@@ -1023,4 +1023,17 @@ class WarehouseController extends Controller
        $iLevel=array_unique($iLevel);ksort($iLevel);//dd($iLevel);
       return $iLevel;
     }
+
+    public function whPlusCentStock(){
+        $wh = Auth::id();
+        $count = Stoks::where('warehouse',$wh)->pluck('count','id')->toArray();
+        $specify = Stoks::where('warehouse',$wh)->pluck('specify','id')->toArray();
+       foreach ($specify as $key => $value) {
+            $data1 = Render::where(['warehouse'=>$wh,'item'=>$value])->sum('quantity');
+           // d1 = 
+            $data2 = Transfer::where(['warehouseTo'=>$wh,'item'=>$value])->sum('quantity');
+            $data[$key] = $data1 + $data2 + $count[$key];
+        }
+        return $data;
+    }
 }

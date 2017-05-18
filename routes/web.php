@@ -117,4 +117,6 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get','post'],'/opening', "StoreController@index")->name("opening");
      Route::match(['get','post'],'/openingW', "StoreController@openingW")->name("openingW");
     Route::match(['get','post'],'/matchStacks', "UtilityController@matchStacks")->name("matchStacks");
+// testing purpose
+    Route::match(['get','post'],'/whPlusCentStock', "WarehouseController@whPlusCentStock")->name("whPlusCentStock");
 });
