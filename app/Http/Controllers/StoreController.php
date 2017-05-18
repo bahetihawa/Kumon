@@ -108,7 +108,7 @@ class StoreController extends Controller
         $wdata0 = $this->commulativeStack($author,$cent);
         $d1 = array_merge($wdata0,$wdata);
 
-        ksort($d1);
+        krsort($d1);
         
         $whData1 = $this->stkLogData($author,0);
         $wdata1 = $this->exlFarmate($whData1,$cent,1);
@@ -166,26 +166,27 @@ class StoreController extends Controller
     }
     private function commulativeStack($author,$cent){
         $totVal = 0;$stkId = $this->stkLogId;//dd($stkId);
-        $iLevel = (new UtilityController)->level_get();
+        $iLevel = (new UtilityController)->get_level_group(); //level_get();
         foreach ($iLevel as $key => $lv) {
            // $lvs = explode(" ", $lv);
             $kv = trim($key);
-            $kvs = trim($lv);
+            $kvs = $key;
+            $code = Item::where('item',$key)->first()->code;
             $data = StoksLog::where(["warehouse"=>$author,'category'=>1])
                         ->where('created_at','<',$this->period)
                         ->whereIn('id',$stkId)
                         ->with("Items")->whereHas('Items', function($q) use ($lv){
-                                $q->where('item','like', '%'.$lv.'%');})
+                                $q->where('sSub_cat',$lv);})
                         ->sum('count');
 
-           $wdata[$kvs."000"] = ['code'=>$kvs."000",'item'=>$kv,"qt"=>$data];
+           $wdata[$kvs."000"] = ['code'=>$code,'item'=>$kv,"qt"=>$data];
 
            $prc = StoksLog::where(["warehouse"=>$author,'category'=>1])
                             ->where('created_at','<',$this->period)->where('unit_price','!=',0)
                             ->orderBy('id','desc')
                             ->limit(1)
                             ->with("Items")->whereHas('Items', function($q) use ($lv){
-                                $q->where('item','like', '%'.$lv.'%');})
+                                $q->where('sSub_cat',$lv);})
                 ->first()->unit_price;
            $this->totCent = 0;
            foreach ($cent as $key1 => $value1) {
@@ -193,7 +194,7 @@ class StoreController extends Controller
                 $data1 = Render::where(["warehouse"=>$author,'target'=>$key1])
                                 ->where('created_at','<',$this->period)
                                 ->with("Items")->whereHas('Items', function($q) use ($lv){
-                                    $q->where('item','like', '%'.$lv.'%')
+                                    $q->where('sSub_cat',$lv)
                                         ->where('items.category',1);});
              $qt = $data1->sum('quantity');
                 //$data = $qt;
@@ -201,7 +202,7 @@ class StoreController extends Controller
                 $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$key1])
                                 ->where('created_at','<',$this->period)
                                 ->with("Items")->whereHas('Items', function($q2) use ($lv){
-                                    $q2->where('item','like', '%'.$lv.'%')
+                                    $q2->where('sSub_cat',$lv)
                                         ->where('items.category',1);});
                 $qt2 = $data2->sum('quantity');
                // $data_tr = $qt2;

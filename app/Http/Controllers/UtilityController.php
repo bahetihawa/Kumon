@@ -245,6 +245,18 @@ class UtilityController extends Controller
       return $iLevel;
     }
 
+     public function get_level_group(){
+      
+      $iLevel = Item::where('category',1)//->orderBy('item')
+                ->where('code','like','%000')
+                ->orderBy('item','DESC')
+                ->pluck('sSub_cat','item')
+
+                ->toArray();
+       $iLevel=array_unique($iLevel);ksort($iLevel);//dd($iLevel);
+      return $iLevel;
+    }
+
     public function opening($auth){
         $author = $auth;$totVal = 0;$css = [];
         $wh = User::find($auth)->frenchise;
@@ -274,29 +286,30 @@ class UtilityController extends Controller
             $wdata[$k]['stack_val'] = $value['count']*$value['unit_price'];
         }
         //dd($wdata);
-        $iLevel = $this->level_get();
+       // $iLevel = $this->level_get();
+         $iLevel = $this->get_level_group();
         foreach ($iLevel as $key => $lv) {
            
             $data = Stoks::where(["warehouse"=>$author])->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');})->sum('count');
+                $q->where('sSub_cat',$lv);})->sum('count');
 
            $wdata[$key."000"] = ['code'=>$lv."000",'item'=>$lv,"qt"=>$data];
            $prc = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');})->first()->unit_price;
+                $q->where('sSub_cat',$lv);})->first()->unit_price;
            $totCent = 0;
            foreach ($cent as $key1 => $value1) {
 
                 $data1 = Render::where(["warehouse"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');});
+                $q->where('sSub_cat',$lv);});
                 $qt = $data1->sum('quantity');
                 //$data = $qt;
 
                 $data2 = Transfer::where(["warehouseTo"=>$author,'target'=>$key1])->with("Items")->whereHas('Items', function($q2) use ($lv){
-                $q2->where('item','like', '%'.$lv.'%');});
+                $q2->where('sSub_cat',$lv);});
                 $qt2 = $data2->sum('quantity');
                // $data_tr = $qt2;
                 $qtx = $qt+$qt2;
-                 $wdata[$lv."000"][$value1] = $qtx;
+                 $wdata[$key."000"][$value1] = $qtx;
                  $totCent +=$qtx;
                  $totVal +=$qtx*$prc;
             }

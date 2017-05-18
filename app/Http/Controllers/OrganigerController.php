@@ -145,4 +145,19 @@ class OrganigerController extends Controller
          return $data;
         }
     }
+
+    public function geetItemCategoryData($id = null,$category=[]){
+        
+        if($cat = Category::find($id)){
+            array_push($category,$id);
+            $this->geetItemCategoryData($cat->parent,$category);
+        }
+        return $category;
+    }
+
+    public function geetItemCategory($id = null){
+        
+        $cat = $this->geetItemCategoryData($id);
+        echo count($cat);
+    }
 }

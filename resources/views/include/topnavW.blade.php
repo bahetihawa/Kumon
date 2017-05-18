@@ -23,7 +23,7 @@
     </a>
     <ul class="dropdown-menu">
         <li><a href="javascript:void(0)" data-toggle="modal" data-target="#opening1">Opening Stock Month Wise</a></li>
-        <li><a href="{{ url('stockStatus') }}">Download Stock Status</a></li>
+        <!--li><a href="{{ url('stockStatus') }}">Download Stock Status</a></li-->
         
     </ul>
 </li>
