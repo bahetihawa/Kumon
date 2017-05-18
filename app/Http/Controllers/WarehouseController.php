@@ -87,8 +87,8 @@ class WarehouseController extends Controller
         return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableAvailble"]);
     }
     public function wksLevel(Request $request){
-     
-      $iLevel = $this->level_get();
+      $iLevel = $this->get_level_group();
+      //$iLevel = $this->level_get();
       //dd($iLevel);
         $author = Auth::id();
         $cond = ["warehouse"=>$author];
@@ -118,17 +118,17 @@ class WarehouseController extends Controller
             foreach ($iLevel as $kv =>$lv){
              
                  $data[$kv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');})->sum('count');
+                $q->where('sSub_cat',$lv);})->sum('count');
                 $prc[$kv] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');})->pluck('unit_price')->first();//->pluck('unit_price');
+                $q->where('sSub_cat',$lv);})->pluck('unit_price')->first();//->pluck('unit_price');
                 
                 $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('item','like', '%'.$lv.'%');});
+                $q->where('sSub_cat',$lv);});
                 $qt = $data1->sum('quantity');
                 $data_cnt[$kv] = $qt;
 
                 $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($lv){
-                $q2->where('item','like', '%'.$lv.'%');});
+                $q2->where('sSub_cat',$lv);});
                 $qt2 = $data2->sum('quantity');
                 $data_tr[$kv] = $qt2;
             }
@@ -557,6 +557,18 @@ class WarehouseController extends Controller
       }
       $Level['PSE WKS Z1-Z2'] = 'PSE WKS Z';
          $iLevel= array_unique($Level);
+      return $iLevel;
+    }
+
+    public function get_level_group(){
+      
+      $iLevel = Item::where('category',1)//->orderBy('item')
+                ->where('code','like','%000')
+                ->orderBy('item','DESC')
+                ->pluck('sSub_cat','item')
+
+                ->toArray();
+       $iLevel=array_unique($iLevel);ksort($iLevel);//dd($iLevel);
       return $iLevel;
     }
     
