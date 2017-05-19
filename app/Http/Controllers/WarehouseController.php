@@ -498,7 +498,7 @@ class WarehouseController extends Controller
         }
     }
     
-    public function addCharges(){
+   /* public function addCharges(){
         $author = Auth::id();
        $data =  Orders::find(Input::get("order"));
        $data->others += Input::get("other");
@@ -523,7 +523,37 @@ class WarehouseController extends Controller
         endif;
        }
        return redirect()->back()->with(["message"=>'Record Added successfully']);
+    }*/
+
+    public function addCharges(){
+        $author = Auth::id();
+        $orderNo = Input::get("order");
+       $data =  Orders::find(Input::get("order"));
+       $data->others += Input::get("other");
+       $data->freight += Input::get("freight");
+       $data->custom += Input::get("custom");
+       $data->cnf += Input::get("cnf");
+       $amt = Input::only("other","freight","cnf","custom");
+       $oc = array_sum($amt);
+       $data->sum += $oc;
+       $data->save();
+       $amount = $data->amount;
+       $ratio = $oc/$amount;
+       $data = [];
+       $cons    = Consignment::where(["warehouse"=>$author,'orderNo'=>$orderNo])->pluck('total',"item")->toArray();
+       $quant    = Consignment::where(["warehouse"=>$author,'orderNo'=>$orderNo])->pluck('quantity',"item")->toArray();
+       foreach ($cons as $key => $value) {
+          $addPrice = $value*$ratio/$quant[$key];
+          $stk = Stoks::where(["warehouse"=>$author,'specify'=>$key])->first();
+          $cPrice = $stk->unit_price;
+         $newPrice = $addPrice + $cPrice;
+         $stk->unit_price = $newPrice;
+         $stk->save();
+          $data[$key] =  $stk->unit_price;
+       }
+       return redirect()->back()->with(["message"=>'Record Added successfully']);
     }
+
     public function updatePrice($order, $defalt = []){
         $pp = $defalt;
         //dd($pp);
@@ -548,6 +578,8 @@ class WarehouseController extends Controller
       }
       //dd($prc);
     }
+
+
     public function level_get(){
       
       $d = Item::where('category',1)
@@ -587,12 +619,23 @@ class WarehouseController extends Controller
       foreach ($iLevel as $lv){
         
                  $count = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
-                $q->where('sSub_cat',$lv);})->sum('count');
-                 $up = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('sSub_cat',$lv);})->sum('count');               
+
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('sSub_cat',$lv);});
+                $qt = $data1->sum('quantity');
+
+                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($lv){
+                $q2->where('sSub_cat',$lv);});
+                $qt2 = $data2->sum('quantity');
+
+                $tCount = $count + $qt +$qt2;
+
+                $up = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
                 $q->where('sSub_cat',$lv);})->pluck('unit_price')->first();
-               // if($count !=0 && $up != 0 ):
-                $data[$lv] = ["amt"=>$count*$up,'qt'=>$count];
-               // endif;
+
+                $data[$lv] = ["amt"=>$tCount*$up,'qt'=>$count];
+               
       }
       return $data;
     }
@@ -1022,18 +1065,5 @@ class WarehouseController extends Controller
                 ->toArray();
        $iLevel=array_unique($iLevel);ksort($iLevel);//dd($iLevel);
       return $iLevel;
-    }
-
-    public function whPlusCentStock(){
-        $wh = Auth::id();
-        $count = Stoks::where('warehouse',$wh)->pluck('count','id')->toArray();
-        $specify = Stoks::where('warehouse',$wh)->pluck('specify','id')->toArray();
-       foreach ($specify as $key => $value) {
-            $data1 = Render::where(['warehouse'=>$wh,'item'=>$value])->sum('quantity');
-           // d1 = 
-            $data2 = Transfer::where(['warehouseTo'=>$wh,'item'=>$value])->sum('quantity');
-            $data[$key] = $data1 + $data2 + $count[$key];
-        }
-        return $data;
     }
 }

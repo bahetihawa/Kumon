@@ -49,6 +49,7 @@
             {!! Form::text('date',null,['class' => 'form-control','id'=>'calender','required'=>'true']) !!}
             {!! 'Select the file to upload.' !!}<br>
             {!! Form::file('file',['class' => 'form-control']) !!}
+            <div class="hide">
             {!! 'Enter Custom Duty in INR.' !!}<br>
             {{ Form::text('custom', '0', array('class' => 'form-control col-md-6')) }} <br>
             {!! 'Enter Freight Charges in INR.' !!}<br>
@@ -57,6 +58,7 @@
             {{ Form::text('cnf', '0', array('class' => 'form-control col-md-6')) }} <br>
              {!! 'Enter Other Charges in INR.' !!}<br>
             {{ Form::text('other', '0', array('class' => 'form-control col-md-6')) }} <br>
+            </div>
             {!! 'Enter Starting Line.' !!}<br>
             {{ Form::number('start', '6', array('class' => 'form-control')) }}
             {!! 'Enter Sheet No.' !!}<br>
