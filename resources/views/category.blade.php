@@ -98,4 +98,10 @@
 
   </div>
 </div>
+<style type="text/css">
+  .level2{
+    color: #7c7c7c;
+    pointer-events: none;
+  }
+</style>
 @endsection

@@ -33,13 +33,17 @@ class OrganigerController extends Controller
             "category"=>"required",
         ]);
 		if($request['model'] == "Category"):
-                   // Category::create($request->input());
+                    Category::create($request->input());
                     return redirect()->route('catagory')->with(["message"=>'Added successfully']);
                 endif;
                 if($request['model'] == "Items"):
-                    $this->geetItemCategory($request->input('category'));
-                    dd($request->input('category'));
-                  //  Item::create($request->input());
+                   $cat = $this->geetItemCategory($request->input('category'));
+                    $data = $request->input();
+                    $data['category'] = $cat['category'];
+                    $data['sub_cat'] = $cat['sub_cat'];
+                    $data['sSub_cat'] = $cat['sSub_cat'];
+
+                    Item::create($data);
                     return redirect()->route('organiger.Items')->with(["message"=>'Added successfully']);
                 endif;
     }
@@ -61,7 +65,7 @@ class OrganigerController extends Controller
     public function trees($pid = 0,$l = 0) {
 	 $category = Category::where(['parent'=>$pid])->get();
             foreach($category as $xs){
-		echo "<option value='".$xs->id."' id='i".$xs->id."'>";
+		echo "<option value='".$xs->id."' id='i".$xs->id."' class = 'level".$l."'>";
 		$i= $l;
 		while($i > 0){
                     echo "|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;";
@@ -148,21 +152,19 @@ class OrganigerController extends Controller
         }
     }
 
-    public function geetItemCategoryData($id = null,$category=[]){
-        if($id > 0){
-            if($cat = Category::find($id)){
-                //array_push($category,$id);
-                $category[] =$id;
-                $this->geetItemCategoryData($cat->parent,$category);
-            }
-        }
-        //echo count($category);
-        return $category;die;
-    }
-
     public function geetItemCategory($id = null){
+            $data = ['category'=>$id,'sub_cat'=>0,'sSub_cat'=>0];
+            $cat = Category::find($id);
+            if($cat->parent != 0){
+                $data2 = $cat->parent;
+                $data = ['category'=>$data2,'sub_cat'=>$id,'sSub_cat'=>0];
+                $cat = Category::find($data2);
+                 if($cat->parent != 0){
+                    $data3 = $cat->parent;
+                    $data = ['category'=>$data3,'sub_cat'=>$data2,'sSub_cat'=>$id];
+                }
+            }
         
-        $cat = $this->geetItemCategoryData($id);
-        echo count($cat);
+        return  $data;
     }
 }
