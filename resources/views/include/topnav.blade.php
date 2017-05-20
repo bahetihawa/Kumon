@@ -55,3 +55,13 @@
        
     </ul>
 </li>
+<li class="dropdown">
+    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:voide(0)">Backup/Restore
+     <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu">
+        <li><a href="{{route('backup')}}">Backup</a></li>
+        <li><a href="{{ route('restore') }}">Restore</a></li>
+        
+    </ul>
+</li>
