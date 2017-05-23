@@ -11,14 +11,14 @@
     </thead>
     <tbody>
         @foreach($data as $k=>$v)
-        <?php $tc = $v + $countCenter[$k] + $byTransfer[$k];?>
+        <?php $tc = $v + @$countCenter[$k] + @$byTransfer[$k];?>
             <tr>
                 <td class="text-info">{{$k}}</td>
-                 <td class="text-warning">{{$unit_price[$k]}}</td>
-                  <td class="text-default">{{$countCenter[$k] + $byTransfer[$k]}}</td>
+                 <td class="text-warning">{{@$unit_price[$k]}}</td>
+                  <td class="text-default">{{@$countCenter[$k] + @$byTransfer[$k]}}</td>
                    <td class="text-default">{{$v}}</td>
                 <td class="text-success">{{$tc}}</td>
-                <td class="text-danger">{{$tc*$unit_price[$k]}}</td>
+                <td class="text-danger">{{$tc*@$unit_price[$k]}}</td>
             </tr>
         @endforeach
         @if(empty($data))

@@ -163,7 +163,7 @@ class InventoryController extends Controller
             
         if($wc != 0) :
             
-                 $data[$kv] = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Item")->whereHas('Items', function($q) use ($lv,){
+                 $data[$kv] = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Item")->whereHas('Items', function($q) use ($lv){
                 $q->where('sSub_cat',$lv);})->sum('count');
                  $prc[$kv] = Stoks::where(["warehouse"=>$author,'category'=>1])->with("Items")->whereHas('Items', function($q) use ($lv){
                 $q->where('sSub_cat',$lv);})->pluck('unit_price')->first();
