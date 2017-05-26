@@ -440,7 +440,7 @@ class UtilityController extends Controller
             $file = $request->file('file');
             $fileName = $file->getClientOriginalName();
             $destinationPath = 'uploads';
-             unlink($destinationPath."/".$fileName);
+             @unlink($destinationPath."/".$fileName);
             if(file_exists($destinationPath."/".$fileName)){
                 $err = "error";
                 return $err;

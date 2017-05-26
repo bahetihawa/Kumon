@@ -31,6 +31,7 @@ class StoreController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        ini_set('max_execution_time', 0);
         
     }
     
@@ -131,6 +132,7 @@ class StoreController extends Controller
         foreach($itemsWks as $its):
         $data = StoksLog::where(["warehouse"=>$author,'specify'=>$its])
                                                                     ->where('created_at','<',$this->period)
+                                                                    ->where('count','>',0)
                                                                      ->orderBy('id','desc')
                                                                      ->limit(1)
                                                                     ->with("items")
