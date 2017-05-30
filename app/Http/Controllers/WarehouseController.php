@@ -359,7 +359,7 @@ class WarehouseController extends Controller
                    }
                }
                $this->loadStacks();
-               $pp = $this->defaulPrice();
+               //$pp = $this->defaulPrice();
                //Stoks::where("warehouse",0)->update(["warehouse"=>$author]);
                $itemCollection = $this->itemCollection();
 		foreach ($data as $key => $value) {
@@ -541,10 +541,13 @@ class WarehouseController extends Controller
        $ratio = $oc/$amount;
        $data = [];
        $cons    = Consignment::where(["warehouse"=>$author,'orderNo'=>$orderNo])->pluck('total',"item")->toArray();
-       $quant    = Consignment::where(["warehouse"=>$author,'orderNo'=>$orderNo])->pluck('quantity',"item")->toArray();
+       $items    = Consignment::where(["warehouse"=>$author,'orderNo'=>$orderNo])->pluck("item")->toArray();
+
+       //$quant = Stoks::where("warehouse",$author)/*->where('specify','in',$items)*/->toArray(); dd($quant);
        foreach ($cons as $key => $value) {
-          $addPrice = $value*$ratio/$quant[$key];
+          
           $stk = Stoks::where(["warehouse"=>$author,'specify'=>$key])->first();
+          $addPrice = $value*$ratio/$stk->count;
           $cPrice = $stk->unit_price;
          $newPrice = $addPrice + $cPrice;
          $stk->unit_price = $newPrice;
