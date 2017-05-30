@@ -408,7 +408,7 @@ class WarehouseController extends Controller
                         Consignment::where('orderNo', $x->id)->delete();
                         unlink($destinationPath."/".$fileName);
                     }
-                    $this->updatePrice($x->id,$pp);
+                   // $this->updatePrice($x->id,$pp);
 		}
 
             }
