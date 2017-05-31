@@ -256,7 +256,7 @@ class StoreController extends Controller
         $period .= " 23:59:59";
         $this->period = $period;
        //$data = array();
-        
+        $dates = cal_days_in_month(CAL_GREGORIAN, $month, $year)."/".$month."/".$year;
         
         $wh = Auth::id();//dd($wh);
        //foreach ($wh as $key => $value) {
@@ -282,7 +282,7 @@ class StoreController extends Controller
             
                 $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were,$css){
                     $sheet->setFreeze('D7');
-                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css]);
+                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css,'dates'=>$dates]);
 
                 });
             //}

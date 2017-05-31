@@ -3,7 +3,7 @@
 		<th colspan="{{count($header)}}">Kumon India Education Pvt. Ltd.</th>
 	</tr>
 	<tr>
-		<th colspan="{{count($header)}}">Opening stock as on {{date('d-M-Y')}}</th>
+		<th colspan="{{count($header)}}">Opening stock as on {{$dates)}}</th>
 	</tr>
 	<tr>
 		<th colspan="{{count($header)}}">warehouses and all centres of {{$ware}}</th>
