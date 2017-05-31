@@ -271,7 +271,7 @@ class StoreController extends Controller
         Excel::create($fileName, function($excel) use ($data) {
 
             // Set the title
-            $excel->setTitle('OpeningStockAllWareHouse_'.date("m-Y"));
+            $excel->setTitle('ClosingStockAllWareHouse_'.date("m-Y"));
             // Chain the setters
             $excel->setCreator('Roster')
                   ->setCompany('Kumon');
