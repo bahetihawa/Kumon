@@ -280,7 +280,7 @@ class StoreController extends Controller
             //foreach ($data as $k => $v) {
                 extract($data);
             
-                $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were,$css){
+                $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were,$css,$dates){
                     $sheet->setFreeze('D7');
                     $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css,'dates'=>$dates]);
 
