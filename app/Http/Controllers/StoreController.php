@@ -268,7 +268,7 @@ class StoreController extends Controller
        $filenameE = 'opening_report_'.$month.'_'.$year.'_'.$were.'.xlsx';
         $filePathName = 'exports/'. $filenameE;
 
-        Excel::create($fileName, function($excel) use ($data) {
+        Excel::create($fileName, function($excel) use ($data,$dates) {
 
             // Set the title
             $excel->setTitle('ClosingStockAllWareHouse_'.date("m-Y"));
