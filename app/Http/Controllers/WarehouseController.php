@@ -301,6 +301,7 @@ class WarehouseController extends Controller
                  $this->issueToCenter($data, $center);
                  $this->issueToCenterNci($center,$startNci);
                  $this->issueToCenterCi($center,$startCi);
+                 redirect()->back()->with(["message"=>'Record Added successfully.']);
              }
             }else{
                 redirect()->back()->with(["message"=>'No File Selected.']);
