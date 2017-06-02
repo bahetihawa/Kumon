@@ -257,13 +257,22 @@ class WarehouseController extends Controller
         }
         }
         $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
-        $cnt = Center::whereNotIn('id',$it)->pluck("centerName","id")->toArray();
+        if (Input::has('leftSearch')){
+          $cnt = Center::where('centerName','like','%'.Input::get('leftSearch')."%")->pluck("centerName","id")->toArray();
+        }else{
+          $cnt = Center::whereNotIn('id',$it)->pluck("centerName","id")->toArray();
+        }
+        
         $cnt1 = Center::pluck("centerName","id")->toArray();
         $w = Warehouse::pluck("centerName","id")->toArray();//ar
         $w[0] = "--Select--";
         ksort($w);
         //dd($w);
-        $data = Transfer::distinct()->where('warehouse',$author)->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+        if($cent !=0){
+                $data = Transfer::distinct()->where('warehouse',$author)->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+        }else{
+             $data = Transfer::distinct()->where('warehouse',$author)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+        }
          $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $perPage = 10;
@@ -308,7 +317,12 @@ class WarehouseController extends Controller
             }
         }
         $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
-        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        if (Input::has('leftSearch')){
+          $cnt = Center::where('centerName',"like","%".Input::get('leftSearch')."%")->pluck("centerName","id")->toArray();
+        }else{
+          $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        }
+        
         $cnt1 = Center::pluck("centerName","id")->toArray();
         if($cent > 0){
                 $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
@@ -962,7 +976,11 @@ class WarehouseController extends Controller
         }
         }
         $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
-        $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        if (Input::has('leftSearch')){
+           $cnt = Center::where('centerName','like',"%".Input::get('leftSearch')."%")->pluck("centerName","id")->toArray();
+        }else{
+            $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
+        }
         $cnt1 = Center::pluck("centerName","id")->toArray();
         $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>3])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
          $currentPage = LengthAwarePaginator::resolveCurrentPage();

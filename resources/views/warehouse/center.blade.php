@@ -10,7 +10,7 @@
 @endsection
 @section('content')
     <div class="panel panel-info col-md-3 left-nav">
-        <div class="panel-heading">Menu</div>
+        <div class="panel-heading">@include('include.searchLeft')</div>
         <div class="panel-body">
            <ul class="list-group">
                @foreach($centers as $k=>$cent)
