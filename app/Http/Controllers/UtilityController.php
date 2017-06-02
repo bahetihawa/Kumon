@@ -85,12 +85,11 @@ class UtilityController extends Controller
         if(!file_exists($filename)){
             return back()->with(["message"=>"Record Id: ".$file." : Requested file moved or deleted"]);
         }
-        header("Cache-Control: public");
-        header('Content-Type: application/vnd.ms-excel');
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename= ".$filename1);
-        header("Content-Transfer-Encoding: binary");    
-        readfile($filename);
+        Excel::load($filename, function($reader) {
+
+            // reader methods
+
+        })->download('xls');
         return back();
 
     }
@@ -500,18 +499,15 @@ class UtilityController extends Controller
     public function downloadRender($file){
         $filename1 = Render::where("updated_at",$file)->first()->filename;
         $filename = $filename1;
-        $file = explode("/", $filename);
-        $file = explode(".", $file[1]);
-        $file =  $file[0];
+       
        if(!file_exists($filename)){
             return back()->with(["message"=>"Record Id: ".$file." : Requested file moved or deleted"]);
         }
-        header('Content-Type: application/vnd.ms-excel');
-        header("Cache-Control: public");
-        header("Content-Description: File Transfer");
-        header("Content-Disposition: attachment; filename= ".$file);
-        header("Content-Transfer-Encoding: binary");    
-        readfile($filename);
+       Excel::load($filename, function($reader) {
+
+            // reader methods
+
+        })->download('xls');
         return back();
     }
     
