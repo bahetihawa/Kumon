@@ -71,7 +71,12 @@ class UtilityController extends Controller
         if($request->input("data") == 2)
         $cent = Center::all();
         if($request->input("data") == 3)
-        $cent = Warehouse::all();
+        {
+            $ids = User::pluck('frenchise')->toArray();
+            $cent = Warehouse::whereNotIn("id",$ids)->get();
+            //dd($cent);
+        }
+       
         return view('include.locationlist',["location"=>$cent,'mod'=>"regCenter"]);
     }
     public function download($file){
@@ -81,18 +86,21 @@ class UtilityController extends Controller
             return back()->with(["message"=>"Record Id: ".$file." : Requested file moved or deleted"]);
         }
         header("Cache-Control: public");
+        header('Content-Type: application/vnd.ms-excel');
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename= ".$filename1);
         header("Content-Transfer-Encoding: binary");    
         readfile($filename);
         return back();
+
     }
     
     public function getGrn($file){
         $order = Orders::where('id',$file)->pluck('orderNo')[0];
         $data = Consignment::where("orderNo",$file)->with('Items')->get()->toArray();
         $ct =   Auth::id();
-        $center = Warehouse::where("id",$ct)->get()->toArray()[0];
+        $center = User::where("id",$ct)->first()->frenchise;//dd($center);
+        $center = Warehouse::where("id",$center)->first()->toArray();
        $code = $this->getCodeRef("GRN",$center['centerCode'],  time());
         
         $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
@@ -121,7 +129,8 @@ class UtilityController extends Controller
        // $order = Orders::where('updated_at',$file)->pluck('orderNo')[0];
         $data = Render::where(["updated_at"=>$file,'warehouse'=>Auth::id()])->with('Items')->get()->toArray();
         $ct =   Auth::id();
-        $center = Warehouse::where("id",$ct)->get()->toArray()[0];
+        $center = User::where("id",$ct)->first()->frenchise;
+        $center = Warehouse::where("id",$center)->first()->toArray();
        $code = $this->getCodeRef("DN",$center['centerCode'],$file);
         $prc = Stoks::where('warehouse',$ct)->pluck('unit_price','specify')->toArray();
         $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
@@ -171,7 +180,8 @@ class UtilityController extends Controller
        // $order = Orders::where('updated_at',$file)->pluck('orderNo')[0];
         $data = Transfer::where("updated_at",$file)->where('warehouseTo',Auth::id())->with('Items')->get()->toArray();
         $ct =   Auth::id();
-        $center = Warehouse::where("id",$ct)->get()->toArray()[0];
+        $center = User::where("id",$ct)->first()->frenchise;
+        $center = Warehouse::where("id",$center)->first()->toArray();
        $code = $this->getCodeRef("DN",$center['centerCode'],$file);
         $prc = Stoks::where('warehouse',$ct)->pluck('unit_price','specify')->toArray();
         $center['country'] = Country::where('id',$center['country'])->pluck('country')[0];
@@ -493,6 +503,7 @@ class UtilityController extends Controller
        if(!file_exists($filename)){
             return back()->with(["message"=>"Record Id: ".$file." : Requested file moved or deleted"]);
         }
+        header('Content-Type: application/vnd.ms-excel');
         header("Cache-Control: public");
         header("Content-Description: File Transfer");
         header("Content-Disposition: attachment; filename= ".$filename);

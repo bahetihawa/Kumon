@@ -102,6 +102,7 @@
   .level2{
     color: #7c7c7c;
     pointer-events: none;
+    display: none;
   }
 </style>
 @endsection

@@ -11,9 +11,10 @@
                     <tbody><?php $i = 0;?>
                         @foreach($data as $k=>$v)
                             <?php $time = strtotime($v["updated_at"]); $i++;?>
+                            <?php $time1 = strtotime($v["created_at"]); $i++;?>
                         <tr>
                             <td class="text-info"><a href="#">{{ $k+1 }}</a></td>
-                            <td>{{  date("d/m/Y", $time) }}</td>
+                            <td>{{ $v["created_at"] }}</td>
                             
                             <td class="text-warning">{{ @$center[$v["target"]] }}</td>
                              

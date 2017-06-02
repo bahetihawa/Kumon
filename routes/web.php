@@ -96,7 +96,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get', 'post'],'/transfer/{cent}', 'WarehouseController@transfer')->name('transfer');
     Route::match(['get', 'post'],'/consume/{cent}', 'WarehouseController@consume')->name('consume');
     Route::match(['get', 'post'],'/return/{cent}', 'WarehouseController@returnStock')->name('return');
-    Route::match(['get', 'post'],'/render/{cent}', 'WarehouseController@render')->name('render');
+    Route::match(['get', 'post'],'/render/{cent?}', 'WarehouseController@render')->name('render');
     Route::match(['get', 'post'], '/consignments', 'WarehouseController@consignments')->name('consignments');
     Route::match(['get', 'post'], '/addCharges', 'WarehouseController@addCharges')->name('addCharges');
     Route::match(['get', 'post'], '/updatePrice', 'WarehouseController@updatePrice')->name('updatePrice');
@@ -111,7 +111,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::match(['get','post'],'/stockStatusAll', "UtilityController@stockStatusAll")->name("stockStatusAll");
 
     Route::match(['get','post'],'/uploadStacks', "UtilityController@uploadStacks")->name("uploadStacks");
-     //Route::match(['get','post'],'/stockCenter', "UtilityController@stockCenter")->name("stockCenter");
+    //Route::match(['get','post'],'/stockCenter', "UtilityController@stockCenter")->name("stockCenter");
     
     Route::match(['get','post'],'/loadStacks', "UtilityController@loadStacks")->name("loadStacks");
     Route::match(['get','post'],'/opening', "StoreController@index")->name("opening");

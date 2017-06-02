@@ -178,6 +178,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        App\Providers\HelperServiceProvider::class,
 
     ],
 
@@ -230,6 +231,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Excel'=> Maatwebsite\Excel\Facades\Excel::class,
         'Input'=> Illuminate\Support\Facades\Input::class,
+        'MyFuncs' => App\Helpers\MyFuncs::class,
 
     ],
     'centerType' => ['1'=>'Admin','2'=>'Center','3'=>'Warehouse'],

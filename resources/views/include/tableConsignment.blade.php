@@ -31,9 +31,12 @@
                             <td class="text-default"><?= isset($v->warehouse) ? $v->warehouse : "NA" ?></td>
                             @endif
                             <td class="text-right">
-                                <a href="{{ route('getGrn',['file'=> $v['id']]) }}" style="background: #c5dfef;">&nbsp;</i>Get GRN&nbsp;</a> |
-                                <a href="{{ route('download',['file'=> $v['id']]) }}" style="background: #c5dfef;">&nbsp;</i>Get Excel&nbsp;</a> |
-                                <a href="javascript:void(0)" class="text-danger" style="background: #efc5c5;" onclick="addCharges(<?= $v['id'];?>)">&nbsp;Add Charges&nbsp; </a> 
+                            <?php if(Auth::user()->role != 1) {?>
+                                <a href="{{ route('getGrn',['file'=> $v['id']]) }}" style="background: #c5dfef;">&nbsp;</i>Get GRN&nbsp;</a> | <?php } ?>
+                                <a href="{{ route('download',['file'=> $v['id']]) }}" style="background: #c5dfef;">&nbsp;</i>Get Excel&nbsp;</a> 
+                            <?php if(Auth::user()->role != 1) { ?>
+                                | <a href="javascript:void(0)" class="text-danger" style="background: #efc5c5;" onclick="addCharges(<?= $v['id'];?>)">&nbsp;Add Charges&nbsp; </a> 
+                                <?php } ?>
                             </td>
                            
                         </tr>

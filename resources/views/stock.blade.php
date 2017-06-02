@@ -10,7 +10,7 @@
            <ul class="list-group">
                 <li class="list-group-item"><a href="{{ route(Request::route()->getName(),['store'=>0]) }}">All</a></li>
                @foreach($warehouse as $w)
-               <li class="list-group-item"><a href="{{ route(Request::route()->getName(),['store'=>$w->id]) }}">{{ $w->centerName }}</a></li>
+               <li class="list-group-item"><a href="{{ route(Request::route()->getName(),['store'=>MyFuncs::getWarehouseAuthById($w->id)]) }}">{{ $w->centerName }}</a></li>
                 @endforeach
             </ul>
         </div>

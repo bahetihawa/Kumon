@@ -287,29 +287,29 @@ class WarehouseController extends Controller
             $validator = Validator::make(Input::all(), $rules);
              // process the form
             if ($validator->fails()) 
-            {  echo "fai";
+            {  echo "fail";
                 return redirect()->back()->withErrors($validator);
             }
         
-        if ($request->hasFile('file')) {
-             $this->date = $date;
-            $data = $this->upload($request);
-         if($data == "error"){
-            return redirect()->back()->with(["message"=>'Record Already Exists.']);
-         }
-         if(!empty($data)){
-             $this->issueToCenter($data, $center);
-             $this->issueToCenterNci($center,$startNci);
-             $this->issueToCenterCi($center,$startCi);
-         }
-        }else{
-            redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
-        }
+            if ($request->hasFile('file')) {
+                 $this->date = $date;
+                $data = $this->upload($request);
+             if($data == "error"){
+                return redirect()->back()->with(["message"=>'Record Already Exists.']);
+             }
+             if(!empty($data)){
+                 $this->issueToCenter($data, $center);
+                 $this->issueToCenterNci($center,$startNci);
+                 $this->issueToCenterCi($center,$startCi);
+             }
+            }else{
+                redirect()->back()->with(["message"=>'No File Selected.']);
+            }
         }
         $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
         $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
         $cnt1 = Center::pluck("centerName","id")->toArray();
-        $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+        $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
          $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $perPage = 10;
