@@ -310,7 +310,12 @@ class WarehouseController extends Controller
         $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
         $cnt = Center::whereIn('id',$it)->pluck("centerName","id")->toArray();
         $cnt1 = Center::pluck("centerName","id")->toArray();
-        $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+        if($cent > 0){
+                $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+        }else{
+           $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+        }
+         
          $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
         $perPage = 10;
