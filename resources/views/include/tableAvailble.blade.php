@@ -15,7 +15,7 @@
                 <td class="text-success"><?= isset($v->items->code) ? $v->items->code : $v->code ?> </td>
                 <td class="text-warning">{{ $v->count }}</td>
                 <td class="text-danger"><?= isset($v->unit_price) ? $v->unit_price : "NA" ?></td>
-                <td class="text-default"><?= isset($v->unit_price) ? $v->count*$v->unit_price : "NA" ?></td>
+                <td class="text-default"><?= isset($v->unit_price) ? number_format($v->count*$v->unit_price,6,".","") : "NA" ?></td>
             </tr>
         @endforeach
         @if(empty($data->toArray()))

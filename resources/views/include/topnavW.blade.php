@@ -3,12 +3,12 @@
      <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-        <li><a href="{{ url('stock') }}">Availble Stock : CI,NCI,Bags</a></li>
-        <li><a href="{{ url('wksLevel') }}">Availble wks: Level Wise</a></li>
-        <li><a href="{{ url('wks') }}">Availble Wks : Item Wise</a></li>
+        <li><a href="{{ url('stock') }}">Available Stock : CI,NCI,Bags</a></li>
+        <li><a href="{{ url('wksLevel') }}">Available wks: Level Wise</a></li>
+        <li><a href="{{ url('wks') }}">Available Wks : Item Wise</a></li>
         <li><a href="{{ url('stockCenters/0') }}">WKS Stock @ Centers</a></li>
         <li><a href="{{ url('stockCentersCiNci/0') }}">CI/NCIStock @ Centers</a></li>
-        <li><a href="{{ url('consignments') }}">Purchase Orders</a></li>
+        <li><a href="{{ url('consignments') }}">Purchases</a></li>
         <li><a href="{{ url('transfer/0') }}">Stock : Transfer @ Warehouses</a></li>
         <li><a href="{{ url('render/0') }}">Stock : Issue to Center</a></li>
         <li><a href="{{ url('consume/0') }}">Stock : Consumed By Center</a></li>
@@ -22,7 +22,7 @@
      <span class="caret"></span>
     </a>
     <ul class="dropdown-menu">
-        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#opening1">Opening Stock Month Wise</a></li>
+        <li><a href="javascript:void(0)" data-toggle="modal" data-target="#opening1">Closing Stock Month Wise</a></li>
         <!--li><a href="{{ url('stockStatus') }}">Download Stock Status</a></li-->
         
     </ul>

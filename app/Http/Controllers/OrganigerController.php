@@ -35,9 +35,14 @@ class OrganigerController extends Controller
 		if($request['model'] == "Category"):
                     Category::create($request->input());
                     return redirect()->route('catagory')->with(["message"=>'Added successfully']);
-                endif;
-                if($request['model'] == "Items"):
-                   $cat = $this->geetItemCategory($request->input('category'));
+        endif;
+        if($request['model'] == "Items"):
+            if (Item::where('item', '=', Input::get('item'))->exists()) {
+                return back()->with(["message"=>'Item Name Alredy Exists']);
+            }elseif (Item::where('code', '=', Input::get('code'))->exists()){
+                 return back()->with(["message"=>'Item Code Alredy Exists']);
+            }else{
+                    $cat = $this->geetItemCategory($request->input('category'));
                     $data = $request->input();
                     $data['category'] = $cat['category'];
                     $data['sub_cat'] = $cat['sub_cat'];
@@ -45,7 +50,9 @@ class OrganigerController extends Controller
 
                     Item::create($data);
                     return redirect()->route('organiger.Items')->with(["message"=>'Added successfully']);
-                endif;
+            }
+                   
+        endif;
     }
     
     public function deleteEntry($model,$id)

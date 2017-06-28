@@ -18,7 +18,7 @@
                   <td class="text-default">{{@$countCenter[$k] + @$byTransfer[$k]}}</td>
                    <td class="text-default">{{$v}}</td>
                 <td class="text-success">{{$tc}}</td>
-                <td class="text-danger">{{$tc*@$unit_price[$k]}}</td>
+                <td class="text-danger">{{number_format($tc*@$unit_price[$k],6,".","")}}</td>
             </tr>
         @endforeach
         @if(empty($data))

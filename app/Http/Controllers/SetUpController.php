@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Validator;
 use Auth;
+use Input;
 class SetupController extends Controller
 {
     /**
@@ -111,7 +112,12 @@ class SetupController extends Controller
                 endif;
     }
     public function centers()
-    { 	$center = Center::with("District")->paginate(10);
+    { 	
+        if (Input::has('leftSearch')){
+            $center = Center::where('centerName','like',Input::get('leftSearch'))->orWhere('centerCode','like',Input::get('leftSearch'))->with("District")->paginate(10);
+        }else{
+            $center = Center::with("District")->paginate(10);
+        }
         $country = Country::all();
         $province = Province::all();
         $dist = District::all();
