@@ -176,18 +176,3 @@ $(".panel-default").addClass('panel-info').removeClass('panel-default');
 function optionDisabled(e){
      $(e).attr('disabled','disabled');          
 }
-
-$('.navbar-nav > li > ul a').click(function(){
-	var text = $(this).text();
-	var prt = $(this).parents('.dropdown').find('.dropdown-toggle').text();
-	var crumb = prt+" >> "+text;
-	sessionStorage.crumb = crumb;
-	
-});
-
-$(document).ready(function(){
-	if(sessionStorage['crumb'] == ""){
-		$('#crumb').hide();
-	}
-	$('#crumb').html(sessionStorage['crumb']);
-});

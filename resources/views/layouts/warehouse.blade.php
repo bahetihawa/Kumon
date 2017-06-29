@@ -81,7 +81,7 @@
                 </div>
             </div>
         </nav>
-        <div class="container text-danger" id="crumb">Home</div>
+        <div class="container text-danger" id="crumb">{{ config('app.breadcrumb')[Request::route()->getName()]}}</div>
 @if(Session::has('message'))
 <div class="alert {{ Session::get('alert-class', 'alert-danger text-center') }}">{{ Session::get('message') }}</div>
 @endif
