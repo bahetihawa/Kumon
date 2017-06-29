@@ -1,9 +1,13 @@
 @extends('layouts.secondary')
 
 @section('left_title')
-    {!! $left_title !!}
+    {!! $left_title !!} 
+    
 @endsection
 @section('leftbar')
+<script type="text/javascript">
+    	$(".leftPan .panel-heading").append(': <a href="/setup/exportCenterList">Download List</a>');
+    </script>
 <li class="list-group-item">
 	<form class='row'>
 		<div class="col-md-8">

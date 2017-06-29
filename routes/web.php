@@ -48,12 +48,15 @@ Route::group(['middleware' => 'auth'], function() {
 	'as'=>'setup.addForm'
 	]);
    Route::post('/setup/states', 'SetUpController@states');
-   Route::post('//orgniser/getvalue', 'OrganigerController@getvalue');
+   Route::post('/orgniser/getvalue', 'OrganigerController@getvalue');
    Route::post('/setup/getCenter', 'SetUpController@getCenter');
 	Route::get('/setup-delet/{model}/{id}', [
 	'uses'=>'SetUpController@deleteEntry',
 	'as'=>'setup.delete'
 	]);
+
+    Route::get('/setup/exportCenterList', 'SetUpController@exportCenterList')->name('setup.exportCenterList');
+
     Route::get('/organiser-delet/{model}/{id}', [
 	'uses'=>'OrganigerController@deleteEntry',
 	'as'=>'organiser.delete'

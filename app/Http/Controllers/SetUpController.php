@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Validator;
 use Auth;
 use Input;
+use Excel;
 class SetupController extends Controller
 {
     /**
@@ -165,5 +166,37 @@ class SetupController extends Controller
                 $feature->reguard();
                 $feature->save();
 		return (($mode =="Centers") ? redirect()->route('center'): redirect()->route('warehouse'));
+    }
+
+    public function exportCenterList(){
+        $country = Country::pluck('country','id')->toArray();
+        $province = Province::pluck('province','id')->toArray();
+        $dist = District::pluck('district','id')->toArray();
+        $dat = Center::all();
+        $data = array();
+        foreach($dat as $dd){
+            $data[] = [
+                        'Name'=>$dd->centerName,
+                        'Code'=>$dd->centerCode,
+                        'Type'=>$dd->cst,
+                        'Instructor'=>$dd->concern,
+                        'Email'=>$dd->email,
+                        'Phone'=>$dd->phone,
+                        'Address'=>$dd->address,
+                        'City'=>$dist[$dd->district],
+                        'State'=>$province[$dd->province],
+                        'Country'=>$country[$dd->country],
+                        'Tin'=>$dd->tin,
+                        ];
+        }
+        Excel::create('Kumon Centers', function($excel) use ($data){
+
+            $excel->sheet('Centers', function($sheet) use ($data){
+
+                $sheet->fromArray($data);
+
+            });
+
+        })->export('xls');
     }
 }

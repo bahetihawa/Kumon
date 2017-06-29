@@ -33,5 +33,14 @@
                     </tbody>
                 </table>
 <script>
-    $("#searchForm").hide();
+
+    //$("#searchForm").hide();
+    $("#searchForm").html('<form>From: <input name="from" class="input-sm from" placeholder="Start Date" required> To: <input name="to" class="input-sm to" placeholder="End Date" required /> <input type="submit" value="Find" ></form>');
+    $('.from').datepicker({
+            dateFormat: "yy-mm-dd",
+            
+        });
+    $('.to').datepicker({dateFormat: "yy-mm-dd"});
+
+    
    </script>

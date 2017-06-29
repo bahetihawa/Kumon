@@ -289,7 +289,7 @@ class WarehouseController extends Controller
         return view("warehouse.transfer",["left_title"=>"warehouse","centers"=>$cnt,"center"=>$cnt1,'data'=>  $units,"include"=>"tableTransfer","input"=>"transfer",'wareh'=>$w]);
     
     }
-    public function render(Request $request,$cent){
+    public function render(Request $request,$cent,$from = 0,$to = 0){
         extract(Input::All());
         
         $author = Auth::id();
@@ -331,10 +331,23 @@ class WarehouseController extends Controller
         }
         
         $cnt1 = Center::pluck("centerName","id")->toArray();
+        $cnds = ['warehouse'=>$author,'targetType'=>1];
         if($cent > 0){
-                $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+            if($from > 0 && $to > 0){
+                $data = Render::distinct()->where($cnds)
+                        ->where('target',$cent)->where("created_at",'>=',$from)->where("created_at",'<=',$to)
+                        ->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+            }else{
+                $data = Render::distinct()->where($cnds)->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+            }
         }else{
-           $data = Render::distinct()->where(['warehouse'=>$author,'targetType'=>1])->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+            if($from > 0 && $to > 0){
+                $data = Render::distinct()
+                ->where($cnds)->where("created_at",'>=',$from)->where("created_at",'<=',$to)
+                ->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+            }else{
+                $data = Render::distinct()->where($cnds)->orderBy('updated_at', 'desc')->get(['updated_at','target','created_at']);
+            }
         }
          
          $currentPage = LengthAwarePaginator::resolveCurrentPage();
