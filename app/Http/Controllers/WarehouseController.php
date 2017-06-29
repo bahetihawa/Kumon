@@ -392,12 +392,12 @@ class WarehouseController extends Controller
            })->toArray();//dd($data);
            $x = Orders::Create(["file"=>$fileName]);
            if(!empty($data)){
-               foreach ($data as $key => $value) {
+               /*foreach ($data as $key => $value) {
                 $itemCode = str_slug($value["item_code"]);
                    if(!array_key_exists($itemCode,$itemCollection)){
                        $this->createNewItem($value);
                    }
-               }
+               }*/
                $this->loadStacks();
                //$pp = $this->defaulPrice();
                //Stoks::where("warehouse",0)->update(["warehouse"=>$author]);

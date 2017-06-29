@@ -81,6 +81,7 @@
                 </div>
             </div>
         </nav>
+        <div class="container text-danger" id="crumb">Home</div>
 @if(Session::has('message'))
 <div class="alert {{ Session::get('alert-class', 'alert-danger text-center') }}">{{ Session::get('message') }}</div>
 @endif
