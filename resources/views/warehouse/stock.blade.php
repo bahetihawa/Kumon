@@ -27,9 +27,14 @@
     </div>
     <div class="panel panel-info col-md-9">
         <div class="panel-heading row">
-            <a id="addNew" class='col-md-6' href="javascript:void(0)" onclick="$('#myModal').modal()">
+            <a id="addNew" class='col-md-2' href="javascript:void(0)" onclick="$('#myModal').modal()">
                 Add @yield('left_title')
             </a>
+            <span class='col-md-4'>
+              @if(isset($tQty) && $tQty > 0)
+                <strong>Qty :</strong> {{@$tQty}} ; <strong> Amt :</strong> {{@number_format($tAmt,6,".","")}}
+              @endif              
+            </span>
             @include('include.search')
         </div>
         <div class="panel-body row">

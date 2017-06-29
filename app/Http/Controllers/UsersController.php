@@ -9,6 +9,8 @@ use Input;
 use App\Warehouse;
 use App\Center;
 use App\Integration;
+use App\ActivityLog;
+use Illuminate\Pagination\Paginator;
 class UsersController extends Controller
 {
     public function __construct()
@@ -77,5 +79,24 @@ class UsersController extends Controller
             $msg = "Deleted Successfully";
         }
         return back()->with(["message"=>$msg]);
+    }
+
+    public function ActivityLog($store = 0){
+    if($store > 0){
+        $x = ActivityLog::where('userId',$store)
+            ->leftJoin('users', function($join) {
+              $join->on('users.id', '=', 'activity_logs.userId');
+            })->select(['activity_logs.userId','activity_logs.created_at','activity_logs.end_at','activity_logs.ip','users.name','users.email'])
+            ->orderBy('activity_logs.id','Desc')
+            ->paginate(20);
+    }else{
+        $x = ActivityLog::leftJoin('users', function($join) {
+          $join->on('users.id', '=', 'activity_logs.userId');
+        })->select(['activity_logs.userId','activity_logs.created_at','activity_logs.end_at','activity_logs.ip','users.name','users.email'])
+        ->orderBy('activity_logs.id','Desc')
+        ->paginate(20);
+    }
+       $user = User::all();
+       return view("activitylog",["data"=>$x,"center"=>$user,'left_title'=>'Activity Log']);
     }
 }

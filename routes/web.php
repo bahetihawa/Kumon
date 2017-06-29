@@ -66,6 +66,10 @@ Route::group(['middleware' => 'auth'], function() {
 	'uses'=>'UsersController@resetPassword',
 	'as'=>'users.resetPassword'
 	]);
+    Route::get('/users/activitylog/{store?}', [
+    'uses'=>'UsersController@activityLog',
+    'as'=>'users.activitylog'
+    ]);
     Route::post('/utility/rename', 'UtilityController@rename');
     Route::post('/utility/registerCenter', 'UtilityController@registerCenter');
     Route::match(['get', 'post'],'/users/integration', 'UsersController@integration')->name('integration');

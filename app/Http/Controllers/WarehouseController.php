@@ -66,9 +66,10 @@ class WarehouseController extends Controller
         }else{
            $data = Stoks::where($cond)->where('category','!=',1)->paginate(10);
         }
+       $tQty = Stoks::where($cond)->where('category','!=',1)->sum('count');
+        $tAmt = Stoks::where($cond)->where('category','!=',1)->select(DB::raw('sum(count * unit_price) as total'))->first()->total;
         
-        
-        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableAvailble"]);
+        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $data,"include"=>"tableAvailble",'tQty'=>$tQty,'tAmt'=>$tAmt]);
     }
     public function wks(Request $request){
         $author = Auth::id();
@@ -90,13 +91,15 @@ class WarehouseController extends Controller
       $iLevel = $this->get_level_group();
       //$iLevel = $this->level_get();
       //dd($iLevel);
+      $tt = $this->totalQtyAmtWks();
+      extract($tt);
         $author = Auth::id();
         $cond = ["warehouse"=>$author];
         $cnd = [1 ];
         if (Input::has('search'))
         {
             $cnd = trim(Input::get('search'));
-            $iLevel= $this->searchCond($cnd);//dd($lv);
+            $iLevel= $this->searchCond($cnd);//dd($iLevel);
             foreach ($iLevel as $k=>$lv){
                  $data[$k] = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
                 $q->where('sSub_cat',$lv);})->sum('count');
@@ -136,12 +139,16 @@ class WarehouseController extends Controller
             //dd($data_tr);
         }
         //$units = new Paginator($data, 1);
-        $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $collection = new Collection($data);
-        $perPage = 10;
-        $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
-        $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
-        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock",'unit_price'=>$prc,'countCenter'=>$data_cnt,'byTransfer'=>$data_tr]);
+        if(isset($data))
+        {$currentPage = LengthAwarePaginator::resolveCurrentPage();
+                $collection = new Collection($data);
+                $perPage = 10;
+                $currentPageSearchResults = $collection->slice(($currentPage-1) * $perPage, $perPage)->all();
+                $units= new LengthAwarePaginator($currentPageSearchResults, count($collection), $perPage);
+        return view("warehouse.stock",["left_title"=>"warehouse",'data'=>  $units,"include"=>"tableLevelStock",'unit_price'=>$prc,'countCenter'=>$data_cnt,'byTransfer'=>$data_tr,'tQty'=>$tQty,'tAmt'=>$tAmt]);
+        }else{
+            return back()->with(['message'=>"Invalid Search Key"]);
+        }
     }
     public function stockCenter($cent){
       // $iLevel =  $this->level_get();
@@ -1092,5 +1099,35 @@ class WarehouseController extends Controller
                 ->toArray();
        $iLevel=array_unique($iLevel);ksort($iLevel);//dd($iLevel);
       return $iLevel;
+    }
+
+    public function totalQtyAmtWks(){
+        $iLevel = $this->get_level_group();
+        $author = Auth::id();
+        $cond = ["warehouse"=>$author];
+        $tQty = $tAmt = 0;
+        foreach ($iLevel as $kv =>$lv){
+             
+                 $qt11 = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('sSub_cat',$lv);})->sum('count');
+                 
+                $prc = Stoks::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('sSub_cat',$lv);})->pluck('unit_price')->first();//->pluck('unit_price');
+                
+                $data1 = Render::where($cond)->with("Items")->whereHas('Items', function($q) use ($lv){
+                $q->where('sSub_cat',$lv);});
+                $qt12 = $data1->sum('quantity');
+                
+
+                $data2 = Transfer::where('warehouseTo',$author)->with("Items")->whereHas('Items', function($q2) use ($lv){
+                $q2->where('sSub_cat',$lv);});
+                $qt13 = $data2->sum('quantity');
+                
+                $tqt = $qt11+$qt12+$qt13;
+                $amt = $tqt*$prc;
+                $tQty += $tqt;
+                $tAmt += $amt;
+        }
+        return ['tQty'=>$tQty,'tAmt'=>$tAmt];
     }
 }

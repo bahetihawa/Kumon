@@ -5,7 +5,7 @@ namespace Illuminate\Foundation\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
-
+use DB;
 trait AuthenticatesUsers
 {
     use RedirectsUsers, ThrottlesLogins;
@@ -114,6 +114,14 @@ trait AuthenticatesUsers
     protected function authenticated(Request $request, $user)
     {
         //
+        $dd = json_decode($user);
+        $id = $dd->id;
+        ;
+       
+        $ip = $this->get_client_ip();
+       $x =  DB::table('activity_logs')->insertGetId(['userId'=>$id,'ip'=>$ip]);
+       setcookie("log", $x);
+
     }
 
     /**
@@ -149,8 +157,9 @@ trait AuthenticatesUsers
      */
     public function logout(Request $request)
     {
+        //die($_COOKIE['log']);
         $this->guard()->logout();
-
+        DB::table('activity_logs')->where('id',$_COOKIE['log'])->update(['end_at'=>date("Y-m-d H:i:s")]);
         $request->session()->flush();
 
         $request->session()->regenerate();
@@ -166,5 +175,26 @@ trait AuthenticatesUsers
     protected function guard()
     {
         return Auth::guard();
+    }
+
+    public function get_client_ip() {
+       $client  = @$_SERVER['HTTP_CLIENT_IP'];
+    $forward = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+    $remote  = $_SERVER['REMOTE_ADDR'];
+
+    if(filter_var($client, FILTER_VALIDATE_IP))
+    {
+        $ip = $client;
+    }
+    elseif(filter_var($forward, FILTER_VALIDATE_IP))
+    {
+        $ip = $forward;
+    }
+    else
+    {
+        $ip = $remote;
+    }
+
+    return $ip;
     }
 }

@@ -42,7 +42,7 @@
         <li><a href="{{ url('/register') }}">New Account</a></li>
         <li><a href="{{ url('/users/accounts') }}">Accounts</a></li>
         <li><a href="{{ url('/users/integration') }}">Warehouse & Center integration</a></li>
-        <!--li><a href="{{ url('/users/logs') }}">Logs</a></li-->
+        <li><a href="{{ url('/users/activitylog') }}">Activity Logs</a></li>
     </ul>
 </li>
 <li class="dropdown">
