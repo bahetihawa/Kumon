@@ -231,7 +231,7 @@ class WarehouseController extends Controller
     }
     public function transfer(Request $request,$cent){
       
-        extract(Input::All());
+        extract(Input::All());//die($wareh);
         //$this->date = $date;
         $author = Auth::id();
         $rules = array(
@@ -250,6 +250,7 @@ class WarehouseController extends Controller
         
         if ($request->hasFile('file')) {
              $this->date = $date;
+             $this->wh = $wareh;
             $data = $this->upload($request);
          if($data == "error"){
             return redirect()->back()->with(["message"=>'Record Already Exists.']);
@@ -263,12 +264,9 @@ class WarehouseController extends Controller
             redirect()->back()->with(["message"=>'Record Already Exists or No File Selected.']);
         }
         }
-        $it = Integration::where('warehouse',Auth::user()->frenchise)->pluck("center");
-        if (Input::has('leftSearch')){
-          $cnt = Center::where('centerName','like','%'.Input::get('leftSearch')."%")->pluck("centerName","id")->toArray();
-        }else{
-          $cnt = Center::whereNotIn('id',$it)->pluck("centerName","id")->toArray();
-        }
+        
+          $cnt = Warehouse::pluck("centerName","id")->toArray();
+        
         
         $cnt1 = Center::pluck("centerName","id")->toArray();
         $w = Warehouse::pluck("centerName","id")->toArray();//ar
@@ -276,7 +274,7 @@ class WarehouseController extends Controller
         ksort($w);
         //dd($w);
         if($cent !=0){
-                $data = Transfer::distinct()->where('warehouse',$author)->where('target',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+                $data = Transfer::distinct()->where('warehouse',$author)->where('warehouseTo',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','warehouseTo','created_at']);
         }else{
              $data = Transfer::distinct()->where('warehouse',$author)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
         }
@@ -809,7 +807,7 @@ class WarehouseController extends Controller
                         "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName,
-                        'warehouseTo'=>$this->wLoginByCenter($center)
+                        'warehouseTo'=>$this->wLoginByCenter($this->wh)
                     ];
                 }
               //  $item[$item_code] = $rows;
@@ -840,7 +838,7 @@ class WarehouseController extends Controller
                         "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName,
-                        'warehouseTo'=>$this->wLoginByCenter($center)
+                        'warehouseTo'=>$this->wLoginByCenter($this->wh)
                     ];
                 }
             }//dd($item);
@@ -866,7 +864,7 @@ class WarehouseController extends Controller
                         "created_at"=> $this->date,
                         "updated_at"=> $this->time,
                         'filename'=>$this->fileName,
-                        'warehouseTo'=>$this->wLoginByCenter($center)
+                        'warehouseTo'=>$this->wLoginByCenter($this->wh)
                     ];
                 }
             }//dd($item);
@@ -874,10 +872,11 @@ class WarehouseController extends Controller
     }
 
     public function wLoginByCenter($c){
-      $id = Integration::where('center',$c)->pluck('warehouse')->toArray();
-      $id = $id[0];
-      $login = User::where('frenchise',$id)->pluck('id')->toArray();
-      $login = $login[0];
+      //$id = Integration::where('center',$c)->first()->warehouse;
+      //$id = $id[0];
+      $login = User::where('frenchise',$c)->first()->id;
+      //$login = $login[0];
+      //echo $login;die;
       return $login;
       
     }

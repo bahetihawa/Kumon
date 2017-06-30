@@ -17,7 +17,7 @@
         <div class="panel-body">
            <ul class="list-group">
                @foreach($centers as $k=>$cent)
-               <li class="list-group-item"><a href="{{ route(Request::route()->getName(),['cent'=>$k]) }}">{{$cent}}</a></li>
+               <li class="list-group-item"><a href="{{ route(Request::route()->getName(),['cent'=>MyFuncs::getWarehouseAuthById($k)]) }}">{{$cent}}</a></li>
                 
                 @endforeach
             </ul>

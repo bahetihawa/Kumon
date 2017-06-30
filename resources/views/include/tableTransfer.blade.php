@@ -13,9 +13,9 @@
                             <?php $time = strtotime($v["updated_at"]); $i++;?>
                         <tr>
                             <td class="text-info"><a href="#">{{ $k+1 }}</a></td>
-                            <td>{{  date("d/m/Y", $time) }}</td>
+                            <td>{{  $v["created_at"] }}</td>
                             
-                            <td class="text-warning">{{ @$center[$v["target"]] }}</td>
+                            <td class="text-warning">{{ MyFuncs::getWarehouseByAuth($v["warehouseTo"]) }}</td>
                              
                              
                             <td class="text-center">

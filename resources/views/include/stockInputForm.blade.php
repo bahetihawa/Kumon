@@ -87,8 +87,8 @@
             {!! Form::text('date',null,['class' => 'form-control','id'=>'calender','required'=>'true']) !!}
             {!! 'Select a Warehouse.' !!}<br>
             {!! Form::select('wareh',$wareh,null, ['class' => 'form-control selectW','required'=>'true']) !!}
-            {!! 'Select a Center.' !!}<br>
-            {!! Form::select('center',[],null, ['class' => 'form-control selectC','required'=>'true']) !!}<hr>
+            <!--{!! 'Select a Center.' !!}<br>-->
+            {!! Form::select('center',['0'=>'select'],null, ['class' => 'form-control selectC hide','required'=>'true','value'=>"0"]) !!}<hr>
             {!! 'Select the file to upload.' !!}<br>
             {!! Form::file('file',['class' => 'form-control']) !!}<hr>
               
