@@ -12,12 +12,12 @@
         <div class="panel-heading">Menu</div>
         <div class="panel-body">
            <ul class="list-group">
-                <li class="list-group-item"><a href="{{ url('stock') }}">Availble Stock :CI,NCI, Bags</a></li>
-                <li class="list-group-item"><a href="{{ url('wksLevel') }}">Availble Wks :Level wise</a></li>
-                <li class="list-group-item"><a href="{{ url('wks') }}">Availble WKS :Item wise</a></li>
+                <li class="list-group-item"><a href="{{ url('stock') }}">Available Stock : CI,NCI,Bags</a></li>
+                <li class="list-group-item"><a href="{{ url('wksLevel') }}">Available Wks :Level wise</a></li>
+                <li class="list-group-item"><a href="{{ url('wks') }}">Available WKS :Item wise</a></li>
                 <li class="list-group-item"><a href="{{ url('stockCenters/0') }}">Wks Stock @ Centers</a></li>
                 <li class="list-group-item"><a href="{{ url('stockCentersCiNci/0') }}">CI/NCI Stock @ Centers</a></li>
-                <li class="list-group-item"><a href="{{ url('consignments') }}">Purchase Orders</a></li>
+                <li class="list-group-item"><a href="{{ url('consignments') }}">Purchases</a></li>
                 <li class="list-group-item"><a href="{{ url('transfer/0') }}">Stock : Transfer @ Warehouses</a></li>
                 <li class="list-group-item"><a href="{{ url('render/0') }}">Stock : Issue to Center</a></li>
                  <li class="list-group-item"><a href="{{ url('consume/0') }}">Stock : Consumed By Center</a></li>

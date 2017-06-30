@@ -176,3 +176,25 @@ $(".panel-default").addClass('panel-info').removeClass('panel-default');
 function optionDisabled(e){
      $(e).attr('disabled','disabled');          
 }
+
+$('.dropdown-toggle').each(function(){
+	var y = $("#crumb").text().split(" >> ");
+	var x = $(this).text();
+	if(x.trim() == y[0]){
+		$(this).parent('li').addClass('active');
+	} 
+});
+$('.active ul a').each(function(){
+	var y = $("#crumb").text().split(" >> ");
+	var x = $(this).text();
+	if(x.trim() == y[1]){
+		$(this).parent('li').addClass('active');
+	} 
+});
+$('.left-nav ul a').each(function(){
+	var y = $("#crumb").text().split(" >> ");
+	var x = $(this).text();
+	if(x.trim() == y[1]){
+		$(this).parent('li').addClass('active');
+	} 
+});

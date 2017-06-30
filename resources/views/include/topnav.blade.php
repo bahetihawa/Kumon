@@ -6,7 +6,7 @@
         <li><a href="{{ url('/organiger/catagories') }}">Categories</a></li>
         <!--li><a href="{{ url('organiger/levels') }}">Wks Levels</a></li-->
         <li><a href="{{ url('/organiger/Items') }}">Items</a></li>
-        <li><a href="{{ url('/addItemList') }}">Add Bulk Items</a></li>
+        <!--li><a href="{{ url('/addItemList') }}">Add Bulk Items</a></li-->
     </ul>
 </li>
 <li class="dropdown">
