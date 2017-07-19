@@ -44,7 +44,7 @@ class StoreController extends Controller
         $fileName = 'opening_report_'.$month.'_'.$year;
         $filenameE = 'opening_report_'.$month.'_'.$year.'.xlsx';
         $filePathName = 'exports/'. $filenameE;
-
+        $this->dates = $dates = cal_days_in_month(CAL_GREGORIAN, $month, $year)."/".$month."/".$year;
         
         
         //if(!file_exists($filePathName)){
@@ -70,13 +70,14 @@ class StoreController extends Controller
             $excel->setCreator('Roster')
                   ->setCompany('Kumon');
             // Call them separately
+
             $excel->setDescription('date("m-Y")');
             foreach ($data as $k => $v) {
                 extract($v);
             
                 $excel->sheet($were, function($sheet) use ($wdata,$cent,$headings,$were,$css){
                     $sheet->setFreeze('D7');
-                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css]);
+                    $sheet->loadView('stackDown',['wdata'=>$wdata,'cent'=>$cent,'header'=>$headings,'ware'=>$were,'css'=>$css,'dates'=>$this->dates]);
 
                 });
             }

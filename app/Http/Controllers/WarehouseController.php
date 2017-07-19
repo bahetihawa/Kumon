@@ -276,7 +276,7 @@ class WarehouseController extends Controller
         if($cent !=0){
                 $data = Transfer::distinct()->where('warehouse',$author)->where('warehouseTo',$cent)->orderBy('updated_at', 'desc')->get(['updated_at','warehouseTo','created_at']);
         }else{
-             $data = Transfer::distinct()->where('warehouse',$author)->orderBy('updated_at', 'desc')->get(['updated_at','target']);
+             $data = Transfer::distinct()->where('warehouse',$author)->orderBy('updated_at', 'desc')->get(['updated_at','warehouseTo','created_at']);
         }
          $currentPage = LengthAwarePaginator::resolveCurrentPage();
         $collection = new Collection($data);
