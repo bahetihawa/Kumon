@@ -1,0 +1,163 @@
+[2017-07-19 15:16:08] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:17:16] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:18:42] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:18:50] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:18:52] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:19:49] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:21:03] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:21:05] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:21:40] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:21:41] local.ERROR: ErrorException: file_put_contents(/var/www/html/kumon/bootstrap/cache/services.php): failed to open stream: Permission denied in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php:111
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'file_put_conten...', '/var/www/html/k...', 111, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Filesystem/Filesystem.php(111): file_put_contents('/var/www/html/k...', '<?php return ar...', 0)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(189): Illuminate\Filesystem\Filesystem->put('/var/www/html/k...', '<?php return ar...')
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(135): Illuminate\Foundation\ProviderRepository->writeManifest(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(60): Illuminate\Foundation\ProviderRepository->compileManifest(Array)
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#9 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#10 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#11 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#12 {main}  
+[2017-07-19 15:23:29] local.ERROR: ErrorException: array_merge(): Argument #2 is not an array in /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php:175
+Stack trace:
+#0 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(2, 'array_merge(): ...', '/var/www/html/k...', 175, Array)
+#1 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(175): array_merge(Array, 1)
+#2 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/ProviderRepository.php(54): Illuminate\Foundation\ProviderRepository->loadManifest()
+#3 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(540): Illuminate\Foundation\ProviderRepository->load(Array)
+#4 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Bootstrap/RegisterProviders.php(17): Illuminate\Foundation\Application->registerConfiguredProviders()
+#5 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(203): Illuminate\Foundation\Bootstrap\RegisterProviders->bootstrap(Object(Illuminate\Foundation\Application))
+#6 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(254): Illuminate\Foundation\Application->bootstrapWith(Array)
+#7 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(145): Illuminate\Foundation\Http\Kernel->bootstrap()
+#8 /var/www/html/kumon/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(117): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
+#9 /var/www/html/kumon/public/index.php(53): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
+#10 {main}  

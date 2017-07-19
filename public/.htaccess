@@ -18,7 +18,7 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
-ExpiresActive On
-<FilesMatch "\.(ico|gif|jpe?g|png|js|css)$">
-  ExpiresDefault "access plus 1 year"
-</FilesMatch>
+#ExpiresActive On
+#<FilesMatch "\.(ico|gif|jpe?g|png|js|css)$">
+#  ExpiresDefault "access plus 1 year"
+#</FilesMatch>
